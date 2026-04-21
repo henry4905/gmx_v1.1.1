@@ -1,0 +1,243 @@
+{% load static %}
+
+<div class="settings-wrapper">
+
+    <!-- ================= ԶԳՈՒՇԱՑՈՒՄ ================= -->
+    <div style="color: red; font-weight: 600; font-size: 14px; margin-bottom: 16px; text-align: center;">
+        ԱՆՇՈՒՄ․ Անվտանգության նկատառումներից ելնելով տվյալները փոխելը կատարվում է միայն ադմինիստրատորների միջոցով։ Եթե անհրաժեշտություն կա այլ դեպքերում՝ կապ հաստատեք ադմինիստրատորի հետ «Հաղորդագրություններ» բաժնում։
+    </div>
+    <!-- ================= ԸՆԴՀԱՆՈՒՐ ՏՎՅԱԼՆԵՐ ================= -->
+    <h2 class="section-title">Ընդհանուր տվյալներ</h2>
+
+    <div class="profile-card">
+
+        <div class="profile-image">
+            {% if user_type == "worker" and profile.profile_photo %}
+                <img src="{{ profile.profile_photo.url }}" alt="Profile">
+            {% elif user_type != "worker" and profile.logo %}
+                <img src="{{ profile.logo.url }}" alt="Logo">
+            {% else %}
+                <img src="{% static 'icons/default_user.png' %}" alt="Default">
+            {% endif %}
+        </div>
+
+        <div class="profile-info">
+            {% if user_type == "worker" %}
+                <div class="profile-name">{{ profile.user.first_name }} {{ profile.user.last_name }} {{ profile.father_name|default:"" }}</div>
+            {% elif user_type == "facility" %}
+                <div class="profile-name">{{ profile.facility_name }}</div>
+            {% elif user_type == "importer" %}
+                <div class="profile-name">{{ profile.company_name }}</div>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+
+
+    <!-- ================= ԱՆՁՆԱԿԱՆ ՏՎՅԱԼՆԵՐ ================= -->
+    <h2 class="section-title">Անձնական տվյալներ</h2>
+
+    <div class="info-card">
+
+        
+            <div class="info-row">
+                <span>Անուն</span>
+                <span>{{ profile.user.first_name }}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Ազգանուն</span>
+                <span>{{ profile.user.last_name }}</span>
+            </div>
+
+            {% if user_type == "worker" %}
+                <div class="info-row">
+                    <span>Հայրանուն</span>
+                    <span>{{ profile.father_name|default:"Նշված չէ" }}</span>
+                </div>
+
+                <div class="info-row">
+                    <span>Ծննդյան թիվ</span>
+                    <span>
+                        {% if profile.birth_year and profile.birth_month and profile.birth_day %}
+                            {{ profile.birth_day }}/{{ profile.birth_month }}/{{ profile.birth_year }}
+                        {% else %}
+                            Տվյալներ չկան
+                        {% endif %}
+                    </span>
+                </div>
+            {% endif %}
+
+    </div>
+
+
+
+    <!-- ================= ԿԱՊ ================= -->
+    <h2 class="section-title">Կապ</h2>
+
+    <div class="info-card">
+
+        <div class="info-row">
+            <span>Հեռախոսահամար</span>
+            <span id="phone-display">{{ profile.phone|default:"Նշված չէ" }}</span>
+            <button class="edit-btn" data-field="phone">Փոխել</button>
+        </div>
+
+        <div class="info-row">
+            <span>Էլ․ հասցե</span>
+            <span id="email-display">{{ profile.user.email|default:"Նշված չէ" }}
+                {% if profile.is_verified %}(Վերիֆիկացված){% else %}(Չի վերիֆիկացված){% endif %}
+            </span>
+            <button class="edit-btn" data-field="email">Փոխել</button>
+        </div>
+
+    </div>
+
+    <!-- Modal մեկից՝ փոփոխվող դաշտի համար -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 id="modal-title">Փոխել տվյալը</h3>
+
+        <!-- Փուլ 1: Նոր արժեք -->
+        <div id="step-value">
+          <input type="text" id="modal-input" placeholder="Գրեք նոր արժեքը">
+          <button id="send-code" class="modal-btn">Ուղարկել հաստատման կոդ</button>
+        </div>
+
+        <!-- Փուլ 2: Հաստատման կոդ -->
+        <div id="step-code" style="display: none;">
+          <input type="text" id="code-input" placeholder="Մուտքագրեք հաստատման կոդը">
+          <button id="verify-code" class="modal-btn">Հաստատել կոդը</button>
+        </div>
+
+        <div id="modal-message"></div>
+      </div>
+    </div>
+
+
+
+ 
+    <!-- ================= ԿԱՐԳԱՎԻՃԱԿԸ ՀԱՄԱԿԱՐԳՈՒՄ ================= -->
+    <h2 class="section-title">Կարգավիճակը համակարգում</h2>
+
+    <div class="info-card">
+
+        <div class="info-row">
+            <span>Գործունեության թույլատրություն</span>
+            <span>
+                {% if profile.is_approved %}
+                    Թույլատրված
+                {% else %}
+                    Չի թույլատրված
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="info-row">
+            <span>Վերիֆիկացիայի տեսակը</span>
+            <span>{{ profile.verified_by|default:"Նշված չէ" }}</span>
+        </div>
+
+        <div class="info-row">
+            <span>Վերիֆիկացիայի կարգավիճակ</span>
+            <span>
+                {% if profile.verification_status == "approved" %}
+                    Վերիֆիկացված
+                {% elif profile.verification_status == "pending" %}
+                    Ընթացքի մեջ է
+                {% elif profile.verification_status == "rejected" %}
+                    Մերժված
+                {% else %}
+                    Տվյալ չկա
+                {% endif %}
+            </span>
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= ԱՆՎՏԱՆԳՈՒԹՅՈՒՆ ԵՎ ՆՈՒՅՆԱԿԱՆԱՑՈՒՄ ================= -->
+    <h2 class="section-title">Անվտանգություն և նույնականացում</h2>
+
+    <div class="info-card">
+
+        <div class="info-row">
+            <span>ID քարտի համար</span>
+            <span>{{ profile.id_card_number|default:"Գրված չէ" }}</span>
+        </div>
+
+        <div class="info-row">
+            <a href="{% url 'password_reset' %}">
+                Փոխել գաղտնաբառը
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= ԱՇԽԱՏԱՆՔԱՅԻՆ ԵՎ ԼՐԱՑՈՒՑԻՉ ՏՎՅԱԼՆԵՐ ================= -->
+    <h2 class="section-title">Աշխատանքային և լրացուցիչ տվյալներ</h2>
+
+    <div class="info-card">
+
+        {% if user_type == "worker" %}
+
+            <div class="info-row">
+                <span>Մասնագիտություն</span>
+                <span>{{ profile.specialization|default:"Նշված չէ" }}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Լիցենզիայի համար</span>
+                <span>{{ profile.license_number|default:"Նշված չէ" }}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Աշխատանքի վայրեր</span>
+                <span>{{ profile.workplaces|default:"Նշված չէ" }}</span>
+            </div>
+
+        {% elif user_type == "facility" %}
+
+            <div class="info-row">
+                <span>Բուժհաստատության անվանում</span>
+                <span>{{ profile.facility_name }}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Հասցե</span>
+                <span>{{ profile.fac_address|default:"Նշված չէ" }}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Լիցենզիայի համար</span>
+                <span>{{ profile.factory_license_number|default:"Նշված չէ" }}</span>
+            </div>
+
+        {% elif user_type == "importer" %}
+
+            <div class="info-row">
+                <span>Կազմակերպության անվանում</span>
+                <span>{{ profile.company_name }}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Հասցե</span>
+                <span>{{ profile.fac_address|default:"Նշված չէ" }}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Գրանցման համար</span>
+                <span>{{ profile.factory_license_number|default:"Նշված չէ" }}</span>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>

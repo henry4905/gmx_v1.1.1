@@ -1,0 +1,190 @@
+/* ================= ROOT ================= */
+
+:root{
+  --blue: #0c63e7;
+  --deep: #0a3fa3;
+  --aqua: #00c6c2;
+  --bg: #f4f8ff;
+  --text: #1b263b;
+  --shadow: 0 15px 45px rgba(0,0,0,0.12);
+  --shadow-hover: 0 25px 70px rgba(0,0,0,0.18);
+  --radius: 18px;
+  --transition: 0.3s ease;
+  --font-main: 'Inter', sans-serif;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:var(--font-main);
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* ================= BLOG DETAIL ================= */
+
+.blog-detail{
+  max-width:900px;
+  margin:120px auto 60px;
+  padding:0 40px;
+}
+
+/* title */
+
+.blog-detail h1{
+  font-size:40px;
+  margin-bottom:10px;
+  line-height:1.3;
+  font-weight:700;
+}
+
+/* date */
+
+.blog-detail .date{
+  font-size:14px;
+  color:#6c757d;
+  margin-bottom:30px;
+}
+
+/* ================= IMAGE ================= */
+
+.blog-image{
+  width:100%;
+  margin-bottom:35px;
+}
+
+.blog-image img{
+  width:100%;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  object-fit:cover;
+  max-height:520px;
+}
+
+/* ================= TEXT ================= */
+
+.blog-text{
+  font-size:17px;
+  line-height:1.9;
+  color:#222;
+}
+
+.blog-text p{
+  margin-bottom:20px;
+}
+
+/* ================= RECENT BLOGS ================= */
+
+.recent-blogs{
+  padding:70px 50px 90px;
+}
+
+/* title */
+
+.recent-blogs h2{
+  font-size:30px;
+  text-align:center;
+  margin-bottom:40px;
+  font-weight:600;
+}
+
+/* grid */
+
+.recent-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:30px;
+}
+
+/* ================= CARD ================= */
+
+.recent-card{
+  background:white;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:var(--transition);
+  display:flex;
+  flex-direction:column;
+}
+
+.recent-card:hover{
+  transform:translateY(-8px);
+  box-shadow:var(--shadow-hover);
+}
+
+/* image */
+
+.recent-card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  transition:var(--transition);
+}
+
+.recent-card:hover img{
+  transform:scale(1.06);
+}
+
+/* title */
+
+.recent-card h3{
+  font-size:18px;
+  padding:18px 18px 6px 18px;
+  line-height:1.4;
+}
+
+.recent-card h3 a{
+  text-decoration:none;
+  color:var(--text);
+}
+
+.recent-card h3 a:hover{
+  color:var(--blue);
+}
+
+/* date */
+
+.recent-card .date{
+  font-size:13px;
+  color:#777;
+  padding:0 18px 18px 18px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+  .blog-detail{
+    padding:0 25px;
+  }
+
+  .blog-detail h1{
+    font-size:32px;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .blog-detail{
+    margin-top:90px;
+  }
+
+  .blog-detail h1{
+    font-size:26px;
+  }
+
+  .blog-text{
+    font-size:16px;
+  }
+
+  .recent-blogs{
+    padding:50px 25px 70px;
+  }
+
+}

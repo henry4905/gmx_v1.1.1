@@ -1,0 +1,32 @@
+{% load static %}
+
+<h1>Համակարգի ընդհանուր պարամետրեր</h1>
+
+<h2>Կայքի Լոգոտիպ</h2>
+
+    <div style="display:flex; align-items:center; gap:15px; margin-top:10px;">
+
+        <!-- Ներկայիս լոգոն -->
+        <div style="text-align:center;">
+            {% if site_settings.logo %}
+                <img id="logoPreview" src="{{ site_settings.logo.url }}" alt="Կայքի Լոգո" height="80" style="border:1px solid #ddd; padding:4px; background:#fff;">
+                <div>{{ site_settings.logo_name }}</div>
+            {% else %}
+                <img id="logoPreview" src="{% static 'icons/logo.ico' %}" alt="Կայքի Լոգո" height="80" style="border:1px solid #ddd; padding:4px; background:#fff;">
+                <div>Default Logo</div>
+            {% endif %}
+        </div>
+
+        <!-- Ֆայլ բեռնման և կոճակներ -->
+        <div style="display:flex; flex-direction:column; gap:5px;">
+            <form id="logoForm" method="post" enctype="multipart/form-data" style="display:flex; gap:5px;">
+                {% csrf_token %}
+                <input type="file" id="logoInput" name="logo" accept="image/*">
+                <button type="submit">Պահպանել</button>
+            </form>
+            {% if site_settings.logo_last_modified %}
+                <div>Վերջին փոփոխություն՝ {{ site_settings.logo_last_modified|date:"Y-m-d H:i:s" }}</div>
+            {% endif %}
+        </div>
+
+    </div>

@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>GlobalMedex | {% if importer.seo_title %}{{ importer.seo_title }}{% else %}{{ importer.company_name }}{% endif %}</title>
+
+  {% if importer.seo_description %}
+    <meta name="description" content="{{ importer.seo_description }}">
+  {% elif importer.short_info %}
+    <meta name="description" content="{{ importer.short_info|striptags|truncatechars:160 }}">
+  {% else %}
+    <meta name="description" content="{{ importer.company_name }}">
+  {% endif %}
+
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+  {% if site_settings.logo %}
+    <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+  {% else %}
+    <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+  {% endif %}
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ importer.company_name|escapejs }}",
+    "url": "{{ request.build_absolute_uri }}"{% if importer.logo %},
+    "logo": "{{ request.scheme }}://{{ request.get_host }}{{ importer.logo.url }}"{% endif %}{% if importer.phone %},
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "{{ importer.phone }}",
+      "contactType": "customer service"
+    }{% endif %}
+  }
+  </script>
+
+  <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'importer/css/importer_detail.css' %}">
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<main class="importer-page">
+
+  <!-- HERO -->
+  <section class="importer-hero">
+    <div class="importer-hero-bg"></div>
+
+    <div class="container importer-hero-inner">
+      <div class="importer-hero-left">
+        <div class="importer-logo-wrap">
+          {% if importer.logo %}
+            <div class="importer-logo-box">
+              <img src="{{ importer.logo.url }}" alt="{{ importer.company_name }}">
+            </div>
+          {% else %}
+            <div class="importer-logo-fallback">
+              {{ importer.company_name|slice:":2"|upper }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="importer-hero-right">
+        <span class="importer-kicker">Մատակարար / Ներկայացուցիչ ընկերություն</span>
+
+        <h1 class="importer-title">{{ importer.company_name }}</h1>
+
+        {% if importer.short_info %}
+          <p class="importer-short-info">
+            {{ importer.short_info }}
+          </p>
+        {% endif %}
+
+        <div class="importer-meta-list">
+          {% if importer.country %}
+            <div class="importer-meta-chip">
+              <span class="meta-label">Երկիր</span>
+              <span class="meta-value">{{ importer.country }}</span>
+            </div>
+          {% endif %}
+
+          {% if importer.city %}
+            <div class="importer-meta-chip">
+              <span class="meta-label">Քաղաք</span>
+              <span class="meta-value">{{ importer.city }}</span>
+            </div>
+          {% endif %}
+
+          {% if importer.founded_year %}
+            <div class="importer-meta-chip">
+              <span class="meta-label">Հիմնադրվել է</span>
+              <span class="meta-value">{{ importer.founded_year }}</span>
+            </div>
+          {% endif %}
+
+          <div class="importer-meta-chip">
+            <span class="meta-label">Սերտիֆիկացիա</span>
+            <span class="meta-value">
+              {% if importer.is_certified %}
+                Սերտիֆիկացված է
+              {% else %}
+                Սերտիֆիկացված չէ
+              {% endif %}
+            </span>
+          </div>
+
+          {% if certificates %}
+            <div class="importer-meta-chip">
+              <span class="meta-label">Սերտիֆիկատներ</span>
+              <span class="meta-value">{{ certificates|length }} հատ</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="importer-actions">
+          {% if importer.main_info %}
+            <a href="#importer-about" class="btn-primary">Կարդալ ավելին</a>
+          {% endif %}
+
+          {% if importer.is_certified and certificates %}
+            <a href="#importer-certificates" class="btn-secondary">Սերտիֆիկատներ</a>
+          {% endif %}
+
+          {% if employees %}
+            <a href="#importer-team" class="btn-secondary">Աշխատակազմ</a>
+          {% endif %}
+
+          {% if importer.websites %}
+            <a href="#importer-links" class="btn-light">Կայքեր և սոցցանցեր</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container importer-layout">
+
+    <!-- MAIN -->
+    <section class="importer-main">
+
+      {% if importer.main_info %}
+        <section class="importer-section" id="importer-about">
+          <div class="section-head">
+            <span class="section-kicker">Ընդհանուր տեղեկատվություն</span>
+            <h2>Մատակարարի մասին</h2>
+          </div>
+
+          <div class="importer-card importer-richtext">
+            {{ importer.main_info|safe }}
+          </div>
+        </section>
+      {% endif %}
+
+      <section class="importer-section" id="importer-contact">
+        <div class="section-head">
+          <span class="section-kicker">Կապ և տեղակայություն</span>
+          <h2>Կոնտակտային տվյալներ</h2>
+        </div>
+
+        <div class="importer-contact-grid">
+          {% if importer.phone %}
+            <article class="importer-card contact-card">
+              <h3>Գլխավոր պատասխանատու</h3>
+              <p class="contact-main-value">
+                <a href="tel:{{ importer.phone }}">{{ importer.phone }}</a>
+              </p>
+              <span class="contact-note">Ղեկավարի / հիմնական կապի հեռախոս</span>
+            </article>
+          {% endif %}
+
+          {% if work_phones %}
+            <article class="importer-card contact-card">
+              <h3>Աշխատանքային հեռախոսահամարներ</h3>
+              <div class="contact-list">
+                {% for phone in work_phones %}
+                  <a href="tel:{{ phone.phone }}" class="contact-list-item">
+                    {{ phone.phone }}
+                  </a>
+                {% endfor %}
+              </div>
+            </article>
+          {% endif %}
+
+          {% if importer.email %}
+            <article class="importer-card contact-card">
+              <h3>Էլ. հասցե</h3>
+              <p class="contact-main-value">
+                <a href="mailto:{{ importer.email }}">{{ importer.email }}</a>
+              </p>
+            </article>
+          {% endif %}
+
+          {% if importer.address or importer.country or importer.city %}
+            <article class="importer-card contact-card contact-card--wide">
+              <h3>Հասցե</h3>
+
+              <div class="address-block">
+                {% if importer.country or importer.city %}
+                  <p class="address-top">
+                    {% if importer.country %}{{ importer.country }}{% endif %}
+                    {% if importer.country and importer.city %}, {% endif %}
+                    {% if importer.city %}{{ importer.city }}{% endif %}
+                  </p>
+                {% endif %}
+
+                {% if importer.address %}
+                  <p class="address-main">{{ importer.address }}</p>
+                {% endif %}
+              </div>
+
+              {% if importer.google_map_embed %}
+                <div class="importer-map">
+                  {{ importer.google_map_embed|safe }}
+                </div>
+              {% endif %}
+            </article>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="importer-section" id="importer-certification">
+        <div class="section-head section-head--with-slider">
+          <div class="section-head-content">
+            <span class="section-kicker">Վավերացում</span>
+            <h2>Սերտիֆիկացիա</h2>
+          </div>
+        </div>
+
+        {% if importer.is_certified %}
+          {% if certificates %}
+            <div class="importer-certificates-grid" id="importer-certificates">
+              {% for certificate in certificates %}
+                <article class="certificate-card">
+                  <a href="{{ certificate.file.url }}" class="certificate-link" target="_blank" rel="noopener noreferrer">
+                    <div class="certificate-preview">
+                      {% if certificate.file %}
+                        {% if certificate.file.url|lower|slice:"-4:" == ".pdf" %}
+                          <div class="certificate-pdf">
+                            <span>PDF</span>
+                          </div>
+                        {% else %}
+                          <img src="{{ certificate.file.url }}" alt="{{ certificate.name }}">
+                        {% endif %}
+                      {% else %}
+                        <div class="certificate-fallback">
+                          <span>Սերտիֆիկատ</span>
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="certificate-body">
+                      <h3>{{ certificate.name }}</h3>
+                      <p>Բացել սերտիֆիկատը</p>
+                    </div>
+                  </a>
+                </article>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="importer-card importer-empty-state">
+              <h3>Սերտիֆիկացված է</h3>
+              <p>Սերտիֆիկացման տվյալները շուտով կհրապարակվեն։</p>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="importer-card importer-empty-state importer-empty-state--muted">
+            <h3>Սերտիֆիկացված չէ</h3>
+            <p>Այս պահին հրապարակված սերտիֆիկատներ չկան։</p>
+          </div>
+        {% endif %}
+      </section>
+
+      {% if employees %}
+        <section class="importer-section" id="importer-team">
+          <div class="section-head section-head--with-slider">
+            <div class="section-head-content">
+              <span class="section-kicker">Թիմ</span>
+              <h2>Աշխատակազմ</h2>
+            </div>
+          </div>
+
+          <div class="importer-team-grid">
+            {% for employee in employees %}
+              <article class="employee-card">
+                <div class="employee-photo-wrap">
+                  {% if employee.photo %}
+                    <img src="{{ employee.photo.url }}" alt="{{ employee.name }}" class="employee-photo">
+                  {% else %}
+                    <div class="employee-photo-fallback">
+                      {{ employee.name|slice:":2"|upper }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="employee-body">
+                  <h3>{{ employee.name }}</h3>
+                  <p>{{ employee.position }}</p>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+    </section>
+
+    <!-- SIDEBAR -->
+    <aside class="importer-sidebar">
+
+      <div class="importer-card sidebar-card">
+        <h3>Արագ տվյալներ</h3>
+
+        <div class="sidebar-info-list">
+          {% if importer.founded_year %}
+            <div class="sidebar-info-row">
+              <span>Հիմնադրման տարեթիվ</span>
+              <strong>{{ importer.founded_year }}</strong>
+            </div>
+          {% endif %}
+
+          {% if importer.country %}
+            <div class="sidebar-info-row">
+              <span>Երկիր</span>
+              <strong>{{ importer.country }}</strong>
+            </div>
+          {% endif %}
+
+          {% if importer.city %}
+            <div class="sidebar-info-row">
+              <span>Քաղաք</span>
+              <strong>{{ importer.city }}</strong>
+            </div>
+          {% endif %}
+
+          {% if importer.verification_status %}
+            <div class="sidebar-info-row">
+              <span>Ստուգման կարգավիճակ</span>
+              <strong>
+                {% if importer.verification_status == 'approved' %}
+                  Հաստատված է
+                {% elif importer.verification_status == 'rejected' %}
+                  Մերժված է
+                {% else %}
+                  Ընթացքի մեջ
+                {% endif %}
+              </strong>
+            </div>
+          {% endif %}
+
+          <div class="sidebar-info-row">
+            <span>Սերտիֆիկացիա</span>
+            <strong>
+              {% if importer.is_certified %}
+                Այո
+              {% else %}
+                Ոչ
+              {% endif %}
+            </strong>
+          </div>
+
+          <div class="sidebar-info-row">
+            <span>Հրապարակայնացում</span>
+            <strong>
+              {% if importer.is_approved %}
+                Ակտիվ
+              {% else %}
+                Սպասման մեջ
+              {% endif %}
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      {% if importer.websites %}
+        <div class="importer-card sidebar-card" id="importer-links">
+          <h3>Կայքեր և սոցցանցեր</h3>
+
+          <div class="brand-links-list">
+            {% for site in importer.websites %}
+              <a href="{{ site }}" target="_blank" rel="noopener noreferrer" class="brand-link-item">
+                <span class="brand-link-text">{{ site }}</span>
+                <span class="brand-link-arrow">↗</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </aside>
+
+  </div>
+</main>
+
+{% include "footer.html" %}
+
+<script src="{% static 'importer/js/importer_detail.js' %}"></script>
+</body>
+</html>

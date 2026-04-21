@@ -1,0 +1,171 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>GMX || Հաջող գրանցում</title>
+
+<!-- Favicon -->
+{% if site_settings.logo %}
+  <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+  <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+<style>
+:root {
+  --blue:#0c63e7;
+  --deep:#0a3fa3;
+  --aqua:#00c6c2;
+  --bg:#f5f9ff;
+  --dark:#0d1b2a;
+  --text:#1b263b;
+  --success:#2e7d32;
+  --radius:16px;
+  --transition:0.3s ease;
+}
+
+* { box-sizing:border-box; font-family:"Inter",system-ui,sans-serif; margin:0; padding:0; }
+
+body{
+  min-height:100vh;
+  background: linear-gradient(135deg, var(--blue), var(--deep), var(--aqua));
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.auth-box{
+  background: var(--bg);
+  width:90%;
+  max-width:480px;
+  min-width:300px;
+  padding:40px 24px;
+  border-radius: var(--radius);
+  box-shadow: 0 25px 60px rgba(12,99,231,.25);
+  text-align:center;
+  animation:fadeUp 0.6s ease;
+}
+
+h1{
+  color: var(--dark);
+  font-size: 1.6rem;
+  margin-bottom: 32px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--blue),var(--deep));
+  color:#fff;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition: var(--transition);
+}
+
+button:hover{
+  box-shadow:0 12px 28px rgba(12,99,231,.35);
+  transform:translateY(-1px);
+}
+
+/* fade animation */
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* --- Animated Checkmark --- */
+.check-container{
+  position: relative;
+  width: 25vw;
+  max-width: 150px;
+  min-width: 100px;
+  height: 25vw;
+  max-height: 150px;
+  min-height: 100px;
+  margin:0 auto 32px auto;
+}
+
+.check-circle-bg{
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  border-radius:50%;
+  border: 4px solid rgba(46,125,50,0.2);
+}
+
+.check-circle{
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  border-radius:50%;
+  border: 4px solid var(--success);
+  clip: rect(0 150px 150px 0);
+  transform: rotate(-90deg);
+  animation: circleRotate 0.8s ease forwards;
+}
+
+.check-tick{
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+}
+
+.check-tick path{
+  stroke: var(--success);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke-dasharray: 70;
+  stroke-dashoffset: 70;
+  animation: tickDraw 0.6s 0.8s ease forwards;
+}
+
+/* Animations */
+@keyframes circleRotate{
+  0% { transform: rotate(-90deg) scale(0.5); opacity:0; }
+  50% { transform: rotate(90deg) scale(1.1); opacity:1; }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes tickDraw{
+  to { stroke-dashoffset: 0; }
+}
+
+/* Responsive */
+@media(max-width:480px){
+  .auth-box{ padding:32px 16px; }
+  h1{ font-size:1.4rem; }
+  .check-container{ width:30vw; height:30vw; }
+}
+
+@media(max-width:360px){
+  h1{ font-size:1.2rem; }
+  .check-container{ width:35vw; height:35vw; }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-box">
+  <div class="check-container">
+    <div class="check-circle-bg"></div>
+    <div class="check-circle"></div>
+    <svg class="check-tick" viewBox="0 0 52 52">
+      <path d="M14 27 L22 35 L38 17"/>
+    </svg>
+  </div>
+  <h1>Գրանցումը հաջողությամբ ավարտվել է</h1>
+  <a href="/accounts/login/"><button>Մուտք գործել</button></a>
+</div>
+
+</body>
+</html>

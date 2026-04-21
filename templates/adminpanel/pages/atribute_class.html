@@ -1,0 +1,45 @@
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'adminpanel/css/attribute_class.css' %}">
+
+<div class="attribute-type-container">
+
+    <!-- Ավելացնել Attribute Type -->
+    <form method="POST" action="{% url 'add_attribute_type' %}">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Մուտքագրեք Attribute Type" required>
+        <button type="submit">Ավելացնել</button>
+    </form>
+
+    <!-- Table բոլոր attribute type-երի համար -->
+    <table id="attribute-type-table">
+        <thead>
+            <tr>
+                <th>Անվանում</th>
+                <th>Գործողություններ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attr_type in attribute_types %}
+            <tr>
+                <td>{{ attr_type.name }}</td>
+                <td>
+                    <form method="POST" action="{% url 'delete_attribute_type' attr_type.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Համոզվա՞ծ եք ջնջել');">Ջնջել</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Տվյալներ չեն գտնվել</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

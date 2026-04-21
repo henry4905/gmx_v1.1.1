@@ -1,0 +1,82 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobalMedex | {{ content.title }}</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+{% if site_settings.logo %}
+<link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+<link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+<link rel="stylesheet" href="{% static 'Vlog/css/blog_detail.css' %}">
+
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<!-- BLOG DETAIL -->
+<section class="blog-detail" style="padding:50px; max-width:900px; margin:auto;">
+
+  <!-- Նորության վերնագիր -->
+  <h1 class="blog-title">{{ content.title }}</h1>
+  <p class="date blog-date">{{ content.created_at|date:"d F Y" }}</p>
+
+  <!-- Նկարը եթե կա -->
+  {% if content.images.first %}
+  <div class="blog-image">
+    <img src="{{ content.images.first.image.url }}" alt="{{ content.title }}">
+  </div>
+  {% endif %}
+
+  <!-- Նորության տեքստ -->
+  <div class="blog-text">
+    {{ content.content|safe }}
+  </div>
+
+</section>
+
+<!-- Վերջին 4 նորությունները -->
+<section class="recent-blogs" style="padding:50px; background:#f4f8ff;">
+  <h2 class="section-title">Վերջին նորություններ</h2>
+  <div class="vlog-grid">
+    {% for recent in recent_contents %}
+    <div class="card" data-section="{{ recent.section.id }}">
+
+      {% if recent.images.first %}
+      <img src="{{ recent.images.first.image.url }}" alt="{{ recent.title }}">
+      {% else %}
+      <img src="https://via.placeholder.com/600x400" alt="{{ recent.title }}">
+      {% endif %}
+
+      <div class="card-content">
+        <h3 class="card-title">
+          <a href="{% url 'blog_detail' recent.id %}" style="text-decoration:none; color:inherit;">
+            {{ recent.title }}
+          </a>
+        </h3>
+        <p class="card-date">{{ recent.created_at|date:"d F Y" }}</p>
+        <a href="{% url 'blog_detail' recent.id %}" class="card-btn">Կարդալ</a>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% include "footer.html" %}
+
+</body>
+</html>

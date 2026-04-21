@@ -1,0 +1,684 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GlobalMedex | {{ product.name }}</title>
+
+  <meta name="description" content="{{ product.description|default:product.name|striptags|truncatechars:160 }}">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+  {% if site_settings.logo %}
+    <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+  {% else %}
+    <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+  {% endif %}
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.name|escapejs }}",
+    "description": "{{ product.description|default:product.name|striptags|escapejs }}",
+    "url": "{{ request.build_absolute_uri }}"{% if media %},
+    "image": "{{ request.scheme }}://{{ request.get_host }}{{ media.0.file.url }}"{% endif %}{% if product.brand %},
+    "brand": {
+      "@type": "Brand",
+      "name": "{{ product.brand.name|escapejs }}"
+    }{% endif %}{% if product.price_min %},
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "AMD",
+      "price": "{{ product.price_min }}",
+      "availability": "https://schema.org/InStock"
+    }{% endif %}
+  }
+  </script>
+
+  <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'products/css/product_detail.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="{% static 'products/js/product_detail.js' %}" defer></script>
+</head>
+
+
+<body>
+
+{% include "header.html" %}
+
+<section class="product-detail-page">
+  <div class="container">
+
+    <!-- TOP SECTION -->
+    <div class="product-top-layout">
+
+      <!-- MEDIA BLOCK -->
+      <div class="product-media-card">
+        <div class="product-media-shell">
+
+          <div class="product-media-topbar">
+            <div class="product-media-status">
+              <span class="media-status-dot"></span>
+              <span>Մեդիա</span>
+            </div>
+
+            <div class="product-media-tools">
+              {% if media %}
+                <div class="media-counter" id="mediaCounter">
+                  <span id="mediaCurrentIndex">1</span>
+                  <span>/</span>
+                  <span id="mediaTotalCount">{{ media|length }}</span>
+                </div>
+              {% endif %}
+
+              <button
+                type="button"
+                class="media-expand-btn"
+                id="openMediaPreview"
+                aria-label="Բացել մեծ չափով"
+              >
+                <i class="fa-solid fa-expand"></i>
+                <span>Մեծացնել</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="product-images-slider">
+            {% if media %}
+              <button class="prev-slide" type="button" aria-label="Նախորդ մեդիա">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+
+              <div class="slides-container">
+                {% for m in media %}
+                  <div
+                    class="slide {% if forloop.first %}active{% endif %}"
+                    data-slide-index="{{ forloop.counter0 }}"
+                    data-media-type="{{ m.media_type }}"
+                    data-media-src="{{ m.file.url }}"
+                  >
+                    <div class="slide-inner">
+                      {% if m.media_type == 'image' %}
+                        <img
+                          src="{{ m.file.url }}"
+                          alt="{{ product.name }}"
+                          class="product-main-media media-preview-trigger"
+                        >
+                      {% elif m.media_type == 'video' %}
+                        <video
+                          class="product-main-media media-preview-trigger"
+                          controls
+                          preload="metadata"
+                          playsinline
+                        >
+                          <source src="{{ m.file.url }}" type="video/mp4">
+                          Your browser does not support the video tag.
+                        </video>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <button class="next-slide" type="button" aria-label="Հաջորդ մեդիա">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            {% else %}
+              <div class="slide active">
+                <div class="slide-inner">
+                  <img
+                    src="{% static 'images/no-image.jpg' %}"
+                    alt="No image"
+                    class="fallback-image product-main-media"
+                  >
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if media %}
+            <div class="media-thumbs" id="mediaThumbs">
+              {% for m in media %}
+                <button
+                  type="button"
+                  class="media-thumb {% if forloop.first %}active{% endif %}"
+                  data-thumb-index="{{ forloop.counter0 }}"
+                  aria-label="Մեդիա {{ forloop.counter }}"
+                >
+                  {% if m.media_type == 'image' %}
+                    <img src="{{ m.file.url }}" alt="{{ product.name }}">
+                  {% elif m.media_type == 'video' %}
+                    <span class="media-thumb-video">
+                      <i class="fa-solid fa-play"></i>
+                    </span>
+                  {% endif %}
+                </button>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <!-- INFO BLOCK -->
+      <div class="product-info-card">
+        <div class="product-info">
+
+          <div class="product-info-head">
+
+            <div class="product-info-head-top">
+            {% if product.brand and product.brand.id and product.brand.name %}
+              <a href="{% url 'brand_detail' product.brand.id %}" class="product-brand-badge">
+                <i class="fa-solid fa-shield-heart"></i>
+                <span>{{ product.brand.name }}</span>
+              </a>
+            {% endif %}
+          </div>
+
+            <h1>{{ product.name }}</h1>
+          </div>
+
+          <div class="product-meta-list">
+            <div class="meta-row">
+              <div class="meta-label">Արտիկուլ</div>
+              <div class="meta-value">{{ product.artikul }}</div>
+            </div>
+
+            <div class="meta-row">
+              <div class="meta-label">Արտադրող</div>
+              <div class="meta-value">
+                {% if product.brand and product.brand.id and product.brand.name %}
+                  <a href="{% url 'brand_detail' product.brand.id %}" class="importer-link">
+                    {{ product.brand.name }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+
+            {% if product.model_number %}
+            <div class="meta-row">
+              <div class="meta-label">Մոդել</div>
+              <div class="meta-value">{{ product.model_number }}</div>
+            </div>
+            {% endif %}
+
+            {% if product.country_of_manufacture %}
+            <div class="meta-row">
+              <div class="meta-label">Արտադրման երկիր</div>
+              <div class="meta-value">{{ product.country_of_manufacture }}</div>
+            </div>
+            {% endif %}
+
+            {% if product.importer %}
+            <div class="meta-row">
+              <div class="meta-label">Ներկրող</div>
+              <div class="meta-value">
+
+                {% if product.importer.slug %}
+                  <a href="{% url 'importer_detail' product.importer.slug %}" class="importer-link">
+                    {{ product.importer.company_name }}
+                  </a>
+                {% else %}
+                  <span>{{ product.importer.company_name }}</span>
+                {% endif %}
+
+              </div>
+            </div>
+            {% endif %}
+            {% if product.standardisation_code %}
+            <div class="meta-row">
+              <div class="meta-label">Ստանդարտացման կոդ</div>
+              <div class="meta-value">{{ product.standardisation_code }}</div>
+            </div>
+            {% endif %}
+
+            {% if product.price_min or product.price_max %}
+            <div class="meta-row meta-row-price">
+              <div class="meta-label">Գին</div>
+              <div class="meta-value">
+                <div class="product-price-block">
+                  <div class="product-price-main">
+                    {% if product.price_min and product.price_max %}
+                      {{ product.price_min }} – {{ product.price_max }} դրամ
+                    {% elif product.price_min %}
+                      սկսած {{ product.price_min }} դրամից
+                    {% elif product.price_max %}
+                      մինչև {{ product.price_max }} դրամ
+                    {% endif %}
+                  </div>
+
+                  <button
+                    type="button"
+                    class="exchange-link"
+                    id="openExchangeModal"
+                  >
+                    <i class="fa-solid fa-coins"></i>
+                    <span>տեսնել փոխարժեքով</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="product-actions">
+            {% if product.importer %}
+              <button type="button" id="openImporterModal">
+                <i class="fa-solid fa-phone-volume"></i>
+                <span>Կապնվել ներկրողի հետ</span>
+              </button>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS / CONTENT NAV -->
+    <div class="product-content-card">
+      <div class="product-section-tabs" role="tablist" aria-label="Ապրանքի բաժիններ">
+        <button
+          type="button"
+          class="section-tab active"
+          data-tab-target="parameters-section"
+          role="tab"
+          aria-selected="true"
+        >
+          <span>Պարամետրեր</span>
+        </button>
+
+        <button
+          type="button"
+          class="section-tab"
+          data-tab-target="description-section"
+          role="tab"
+          aria-selected="false"
+        >
+          <span>Նկարագրություն</span>
+        </button>
+
+        <button
+          type="button"
+          class="section-tab"
+          data-tab-target="documents-section"
+          role="tab"
+          aria-selected="false"
+        >
+          <span>Փաստաթղթեր և սերտիֆիկատներ</span>
+        </button>
+      </div>
+
+      <div class="product-tab-panels">
+
+        <!-- PARAMETERS TAB -->
+        <div class="tab-panel active" id="parameters-section" role="tabpanel">
+          {% if product.ordered_attribute_values or product.component_groups.all or product.child_components.all %}
+
+            {% if product.ordered_attribute_values %}
+            <div class="product-attributes">
+              <h2>Պարամետրեր</h2>
+
+              {% regroup product.ordered_attribute_values by attribute.attribute_type as type_groups %}
+
+              {% for type_group in type_groups %}
+                <h3>{{ type_group.grouper.name }}</h3>
+
+                <div class="attribute-list">
+                  {% for attr_value in type_group.list %}
+                    <div class="attribute-row">
+                      <div class="attribute-label">{{ attr_value.attribute.name }}</div>
+                      <div class="attribute-value">
+                        {% if attr_value.attribute.data_type == "number" %}
+                          {{ attr_value.value_number }}
+                        {% elif attr_value.attribute.data_type == "boolean" %}
+                          {% if attr_value.value_boolean %}
+                            Այո
+                          {% else %}
+                            Ոչ
+                          {% endif %}
+                        {% else %}
+                          {{ attr_value.value_text }}
+                        {% endif %}
+                        {% if attr_value.attribute.unit %} {{ attr_value.attribute.unit }}{% endif %}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if product.component_groups.all %}
+            <div class="product-component-groups">
+              <h2>Կոմպոնենտների խմբեր</h2>
+
+              {% for group in product.component_groups.all %}
+                <h3>
+                  {{ group.name }}
+                  {% if group.min_select or group.max_select %}
+                    ({{ group.min_select }}–{{ group.max_select }})
+                  {% endif %}
+                </h3>
+
+                {% if group.components.all %}
+                  <div class="attribute-list">
+                    {% for component in group.components.all %}
+                      <div class="attribute-row">
+                        <div class="attribute-label">{{ component.component_product.name }}</div>
+                        <div class="attribute-value">
+                          min: {{ component.min_quantity }}, max: {{ component.max_quantity }}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if product.child_components.all %}
+            <div class="product-child-components">
+              <h2>Անհատական կոմպոնենտներ</h2>
+
+              <div class="attribute-list">
+                {% for child in product.child_components.all %}
+                  <div class="attribute-row">
+                    <div class="attribute-label">{{ child.component_product.name }}</div>
+                    <div class="attribute-value">
+                      min: {{ child.min_quantity }}, max: {{ child.max_quantity }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+          {% else %}
+            <div class="empty-tab-content">
+              <p>Այս ապրանքի համար պարամետրեր դեռ ավելացված չեն։</p>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- DESCRIPTION TAB -->
+        <div class="tab-panel" id="description-section" role="tabpanel" hidden>
+          <div class="product-description-section">
+            <h2>Նկարագրություն</h2>
+
+            {% if product.description %}
+              <div class="product-description-content">
+                {{ product.description|safe }}
+              </div>
+            {% else %}
+              <div class="empty-tab-content">
+                <p>Այս ապրանքի նկարագրությունը դեռ ավելացված չէ։</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- DOCUMENTS TAB -->
+        <div class="tab-panel" id="documents-section" role="tabpanel" hidden>
+
+          <div class="product-documents-section">
+
+            <h2>Փաստաթղթեր և սերտիֆիկատներ</h2>
+
+            <div class="documents-group">
+              <h3>Փաստաթղթեր</h3>
+
+              {% if product.documents.all %}
+                <div class="document-list">
+                  {% for document in product.documents.all %}
+                    <div class="document-item">
+                      <div class="document-item-left">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <div class="document-item-info">
+                          <div class="document-title">{{ document.title|default:document.file.name }}</div>
+                          {% if document.description %}
+                            <div class="document-description">{{ document.description }}</div>
+                          {% endif %}
+                        </div>
+                      </div>
+
+                      <div class="document-item-right">
+                        <a href="{{ document.file.url }}" target="_blank" rel="noopener">
+                          <span>Բացել</span>
+                        </a>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="empty-tab-content">
+                  <p>Փաստաթղթեր դեռ ավելացված չեն։</p>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="documents-group">
+              <h3>Սերտիֆիկատներ</h3>
+
+              {% if product.certificates.all %}
+                <div class="document-list">
+                  {% for certificate in product.certificates.all %}
+                    <div class="document-item">
+                      <div class="document-item-left">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <div class="document-item-info">
+                          <div class="document-title">{{ certificate.title|default:certificate.file.name }}</div>
+                          {% if certificate.description %}
+                            <div class="document-description">{{ certificate.description }}</div>
+                          {% endif %}
+                        </div>
+                      </div>
+
+                      <div class="document-item-right">
+                        <a href="{{ certificate.file.url }}" target="_blank" rel="noopener">
+                          <span>Բացել</span>
+                        </a>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="empty-tab-content">
+                  <p>Սերտիֆիկատներ դեռ ավելացված չեն։</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- IMPORTER MODAL -->
+{% if product.importer %}
+<div class="importer-modal-overlay" id="importerModal">
+  <div class="importer-modal-box">
+    <button type="button" class="importer-modal-close" id="closeImporterModal" aria-label="Փակել">
+      &times;
+    </button>
+
+    <div class="importer-modal-content">
+      <div class="importer-modal-logo">
+        {% if product.importer.logo %}
+          <img src="{{ product.importer.logo.url }}" alt="{{ product.importer.company_name }}">
+        {% else %}
+          <img src="{% static 'images/no-image.jpg' %}" alt="No logo">
+        {% endif %}
+      </div>
+
+      <div class="importer-modal-info">
+        <h3>{{ product.importer.company_name }}</h3>
+
+        <div class="importer-modal-phones">
+          <h4>Հեռախոսահամարներ</h4>
+
+          {% if product.importer.work_phones.all %}
+            <ul>
+              {% for work_phone in product.importer.work_phones.all %}
+                <li>
+                  <a href="tel:{{ work_phone.phone }}">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>{{ work_phone.phone }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>Աշխատանքային հեռախոսահամար նշված չէ։</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div
+  id="exchangeRateData"
+  data-price-min="{{ product.price_min|default_if_none:'' }}"
+  data-price-max="{{ product.price_max|default_if_none:'' }}"
+  data-usd-rate="{{ exchange_rates.USD|default_if_none:'' }}"
+  data-eur-rate="{{ exchange_rates.EUR|default_if_none:'' }}"
+  data-rub-rate="{{ exchange_rates.RUB|default_if_none:'' }}"
+></div>
+
+<!-- EXCHANGE RATE MODAL -->
+<div class="exchange-modal-overlay" id="exchangeModal">
+  <div class="exchange-modal-box">
+    <button type="button" class="exchange-modal-close" id="closeExchangeModal" aria-label="Փակել">
+      &times;
+    </button>
+
+    <div class="exchange-modal-head">
+      <h3>Գնի ցուցադրում փոխարժեքով</h3>
+      <p>
+        ՀՀ տարածքում գործարքները կատարվում են բացառապես
+        Հայաստանի Հանրապետության դրամով։
+      </p>
+    </div>
+
+    <div class="exchange-modal-body">
+      <div class="exchange-base-price">
+        <span class="exchange-label">Գինը դրամով</span>
+        <div class="exchange-main-value">
+          {% if product.price_min and product.price_max %}
+            {{ product.price_min }} – {{ product.price_max }} դրամ
+          {% elif product.price_min %}
+            սկսած {{ product.price_min }} դրամից
+          {% elif product.price_max %}
+            մինչև {{ product.price_max }} դրամ
+          {% else %}
+            Տվյալը հասանելի չէ
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="exchange-rates-list">
+        <div class="exchange-rate-row">
+          <div class="exchange-currency">USD</div>
+          <div class="exchange-value" id="exchangeUsdValue">—</div>
+        </div>
+
+        <div class="exchange-rate-row">
+          <div class="exchange-currency">EUR</div>
+          <div class="exchange-value" id="exchangeEurValue">—</div>
+        </div>
+
+        <div class="exchange-rate-row">
+          <div class="exchange-currency">RUB</div>
+          <div class="exchange-value" id="exchangeRubValue">—</div>
+        </div>
+      </div>
+
+      <div class="exchange-modal-footer">
+        <a
+          href="https://www.cba.am/hy/"
+          class="exchange-cba-link"
+          id="cbaRatesLink"
+          target="_blank"
+          rel="noopener"
+        >
+          Դիտել ՀՀ ԿԲ պաշտոնական փոխարժեքները
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MEDIA PREVIEW MODAL -->
+<div class="media-preview-overlay" id="mediaPreviewModal">
+  <div class="media-preview-box">
+    <button
+      type="button"
+      class="media-preview-close"
+      id="closeMediaPreview"
+      aria-label="Փակել"
+    >
+      &times;
+    </button>
+
+    <div class="media-preview-topbar">
+      <div class="media-preview-counter">
+        <span id="previewCurrentIndex">1</span>
+        <span>/</span>
+        <span id="previewTotalCount">{% if media %}{{ media|length }}{% else %}0{% endif %}</span>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="media-preview-nav media-preview-prev"
+      id="previewPrevBtn"
+      aria-label="Նախորդ մեդիա"
+    >
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <div class="media-preview-stage" id="mediaPreviewStage">
+      {% if media %}
+        {% for m in media %}
+          <div
+            class="media-preview-item {% if forloop.first %}active{% endif %}"
+            data-preview-index="{{ forloop.counter0 }}"
+            data-preview-type="{{ m.media_type }}"
+          >
+            {% if m.media_type == 'image' %}
+              <img src="{{ m.file.url }}" alt="{{ product.name }}">
+            {% elif m.media_type == 'video' %}
+              <video controls preload="metadata" playsinline>
+                <source src="{{ m.file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <button
+      type="button"
+      class="media-preview-nav media-preview-next"
+      id="previewNextBtn"
+      aria-label="Հաջորդ մեդիա"
+    >
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+</div>
+
+{% include "footer.html" %}
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+{% load static %}
+
+<div class="sidebar">
+
+    <!-- LOGO -->
+    <div class="sidebar-logo">
+        
+        {% if site_settings.logo %}
+            <img src="{{ site_settings.logo.url }}" alt="GMX Logo">
+        {% else %}
+            <img src="{% static 'icons/logo.ico' %}" alt="GMX Logo">
+        {% endif %}
+        <span>GMX</span>
+
+    </div>
+
+    <!-- MENU ITEMS -->
+    <div class="menu">
+
+        <span class="admin-name">{{ request.user.username }}</span>
+
+        <a href="{% url 'admin_logout' %}" class="logout-btn">Logout</a>    
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title" >Տեքստային ռեդակտոր </div>
+            <div class="submenu">
+                <a href="#" data-page="text_redactor">Ռեդակտոր</a>
+                <a href="#" data-page="image_redactor">Նկարների ավելացում</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title" >Ֆրոնթենդ</div>
+            <div class="submenu">
+                <a href="#" data-page="general">Ընդհանուր</a>
+                <a href="#" data-page="">Գլխավոր էջ</a>
+                <a href="#" data-page="" >Սլայդեր</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title" >Օգտատերեր</div>
+            <div class="submenu">
+                <a href="#" data-page="">Բոլոր օգտատերերը</a>
+                <a href="#" data-page="">Ավելացնել օգտատեր</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Ապրանքներ</div>
+            <div class="submenu">
+                <a href="#" data-page="">Բոլոր ապրանքները</a>
+                <a href="#">Ավելացնել ապրանք</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Բրենդներ և ներկրողներ</div>
+            <div class="submenu">
+                <a href="#" data-page="brands">Բրենդներ</a>
+                <a href="#">Մատակարարներ</a>
+            </div>
+        </div>
+
+
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Ֆիլտրացիա</div>
+            <div class="submenu">
+                <a href="#">Կատեգորիաներ</a>
+                <a href="#">Թեգեր</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Հարթակ</div>
+            <div class="submenu">
+                <a href="#">Կարգավորումներ</a>
+                <a href="#">Լոգո</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Կապ</div>
+            <div class="submenu">
+                <a href="#">Հաղորդագրություններ</a>
+                <a href="#">FAQ</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Պատվերներ</div>
+            <div class="submenu">
+                <a href="#">Բոլոր պատվերները</a>
+                <a href="#">Վիճակներ</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Որոնում</div>
+            <div class="submenu">
+                <a href="#">Որոնման պատմություն</a>
+                <a href="#">Analytics</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Նորություններ/Հայտարարություններ</div>
+            <div class="submenu">
+                <a href="#">Բոլորը</a>
+                <a href="#">Ավելացնել</a>
+            </div>
+        </div>
+
+        <div class="menu-item has-submenu">
+            <div class="menu-title">Դատաբազա</div>
+            <div class="submenu">
+                <a href="#" data-page="clasification">Դասակարգման կառավարում</a>
+                <a href="#" data-page="atribute_class">Պարամետրերի տեսակներ</a>
+                <a href="#" data-page="">Դասակարգման կառավարում</a>
+                <a href="#" data-page="">Դասակարգման կառավարում</a>
+                <a href="#">Բժիշկներ</a>
+                <a href="#">Հաստատություններ</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="sidebar-handle" id="sidebarToggle"></div>
+</div>
+
+

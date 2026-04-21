@@ -1,0 +1,74 @@
+/* Variables */
+:root {
+  --blue: #0c63e7;
+  --deep: #0a3fa3;
+  --aqua: #00c6c2;
+  --bg: #f5f9ff;
+  --dark: #0d1b2a;
+  --text: #1b263b;
+  --error: #e53935;
+  --success: #28a745;
+  --radius: 16px;
+  --transition: 0.25s ease;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Inter", system-ui, sans-serif; }
+
+body {
+  min-height:100vh;
+  background: linear-gradient(135deg, var(--blue), var(--deep), var(--aqua));
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+
+.auth-box {
+  background: var(--bg);
+  width:100%; max-width:500px; padding:36px;
+  border-radius: var(--radius);
+  box-shadow:0 20px 50px rgba(12,99,231,0.25);
+  animation: fadeUp 0.45s ease;
+}
+
+h1 { text-align:center; margin-bottom:8px; color: var(--dark); }
+p { text-align:center; font-size:14px; margin-bottom:24px; opacity:0.85; color: var(--text); }
+
+.select-box { position: relative; margin-bottom: 20px; }
+.select-btn {
+  width:100%; padding:14px; border-radius:10px; border:1px solid rgba(12,99,231,0.3);
+  background:#fff; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:space-between;
+}
+.arrow {
+  width:10px; height:10px; border-right:2px solid var(--blue); border-bottom:2px solid var(--blue);
+  transform:rotate(45deg); transition: var(--transition); margin-left:10px;
+}
+.select-btn.open .arrow { transform: rotate(-135deg); }
+
+.select-list {
+  margin-top:8px; border-radius:10px; overflow:hidden; background:#fff;
+  box-shadow:0 12px 30px rgba(0,0,0,0.1); max-height:0; transition:max-height 0.35s ease;
+}
+.select-list.open { max-height:300px; }
+.select-list div { padding:12px 14px; cursor:pointer; transition: background var(--transition); font-size:14px; }
+.select-list div:hover { background: rgba(12,99,231,0.08); }
+
+.reg-card { margin-top:18px; padding:18px; border-radius:12px; border:1px solid rgba(12,99,231,0.2); display:none; animation:drop 0.4s ease; }
+.reg-card.active { display:block; }
+.reg-card h3 { margin-bottom:10px; color: var(--dark); font-size:16px; }
+input, select { width:100%; padding:12px; margin-bottom:12px; border-radius:10px; border:1px solid rgba(12,99,231,0.3); font-size:14px; transition: var(--transition); }
+input:focus, select:focus { outline:none; border-color: var(--blue); box-shadow:0 0 0 3px rgba(12,99,231,0.15); }
+button { width:100%; padding:14px; background: linear-gradient(135deg, var(--blue), var(--deep)); border:none; border-radius:10px; color:#fff; font-size:15px; font-weight:600; cursor:pointer; transition:var(--transition); }
+button:hover:not(:disabled) { box-shadow:0 10px 25px rgba(12,99,231,0.35); transform: translateY(-1px); }
+button:disabled { opacity:0.5; cursor:not-allowed; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px);} to {opacity:1; transform:translateY(0);} }
+@keyframes drop { from{opacity:0; transform:translateY(-8px);} to{opacity:1; transform:translateY(0);} }
+
+.birthday { display:flex; gap:8px; margin-bottom:12px; }
+.birthday .b-group { display:flex; flex-direction:column; flex:1; }
+.birthday label { font-size:12px; color:var(--text); margin-bottom:4px; }
+
+.error-msg { color: var(--error); background: rgba(229,57,53,0.08); border-left:3px solid var(--error); padding:10px 12px; border-radius:8px; font-size:14px; margin-bottom:14px; text-align:left; display:none; }
+
+.rules { margin-top:12px; }
+.rules .rule { display:flex; align-items:center; gap:6px; font-size:14px; margin-bottom:6px; }
+.rules .rule .icon { font-weight:bold; width:20px; text-align:center; color:var(--error); transition: color var(--transition); }
+.rules .rule.valid .icon { color: var(--success); }

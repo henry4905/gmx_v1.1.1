@@ -1,0 +1,19 @@
+{% load static %}
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.code.label_tag }} {{ form.code }} <br><br>
+    {{ form.title.label_tag }} {{ form.title }} <br><br>
+
+    <label>Տեքստ</label><br>
+    <div id="editor" contenteditable="true">{{ form.content.value|safe }}</div>
+    <textarea name="content" id="hiddenContent" hidden></textarea>
+
+    <br>
+    <label>Նկարներ</label>
+    <input type="file" name="images" multiple>
+    <br><br>
+
+    <button type="submit">Պահպանել</button>
+</form>

@@ -1,0 +1,720 @@
+{% extends "adminpanel/base.html" %}
+{% load static %}
+
+{% block title %}{{ brand.name }} | Բրենդի կառավարում{% endblock %}
+
+{% block content %}
+<div class="brand-manage-page">
+
+    <!-- TOP -->
+    <div class="brand-manage-topbar">
+        <div class="brand-manage-topbar-left">
+            <a href="{% url 'dynamic_page' 'brands' %}" class="back-link">← Բոլոր բրենդները</a>
+            <h1>{{ brand.name }}</h1>
+            <p>Բրենդի ամբողջական կառավարման էջ</p>
+        </div>
+
+        <div class="brand-manage-topbar-right">
+            <a href="#" class="top-action-btn">Խմբագրել հիմնական տվյալները</a>
+        </div>
+    </div>
+
+    <!-- HERO CARD -->
+    <div class="brand-manage-hero-card">
+        <div class="brand-manage-logo">
+            {% if brand.logo %}
+                <img src="{{ brand.logo.url }}" alt="{{ brand.name }}">
+            {% else %}
+                <div class="brand-logo-placeholder">LOGO</div>
+            {% endif %}
+        </div>
+
+        <div class="brand-manage-hero-info">
+            <h2>{{ brand.name }}</h2>
+
+            {% if short_description %}
+                <p>{{ short_description.value }}</p>
+            {% else %}
+                <p class="empty-text">Կարճ նկարագրություն դեռ չկա։</p>
+            {% endif %}
+
+            <div class="brand-manage-mini-stats">
+                <div class="mini-stat">
+                    <span>Ընդհանուր ինֆո</span>
+                    <strong>{{ brand_infos|length }}</strong>
+                </div>
+                <div class="mini-stat">
+                    <span>Մեդիա</span>
+                    <strong>{{ brand_media|length }}</strong>
+                </div>
+                <div class="mini-stat">
+                    <span>Ներկայացնողներ</span>
+                    <strong>{{ importer_links|length }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="brand-manage-grid">
+
+        <!-- LEFT -->
+        <div class="brand-manage-main">
+
+            <!-- GENERAL INFO -->
+            <div class="manage-section-card">
+                <div class="section-head">
+                    <h3>Ընդհանուր տվյալներ</h3>
+                    <a href="#" class="mini-action-btn">+ Ավելացնել</a>
+                </div>
+
+                <div class="info-list">
+                    {% for item in general_infos %}
+                        <div class="info-row">
+                            <div class="info-row-left">
+                                <span class="info-name">{{ item.name }}</span>
+                                <span class="info-key">{{ item.key }}</span>
+                            </div>
+                            <div class="info-row-value">
+                                {{ item.value }}
+                            </div>
+                            <div class="info-row-actions">
+                                <a href="#">Խմբագրել</a>
+                                <a href="#">Ջնջել</a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="empty-box">Ընդհանուր տվյալներ դեռ չկան։</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- ABOUT -->
+            <div class="manage-section-card">
+                <div class="section-head">
+                    <h3>Բրենդի մասին</h3>
+                    <a href="#" class="mini-action-btn">+ Ավելացնել</a>
+                </div>
+
+                <div class="info-list">
+                    {% for item in about_items %}
+                        <div class="info-row info-row-block">
+                            <div class="info-row-left">
+                                <span class="info-name">{{ item.name }}</span>
+                                <span class="info-key">{{ item.key }}</span>
+                            </div>
+                            <div class="info-row-value long-text">
+                                {{ item.value|linebreaksbr }}
+                            </div>
+                            <div class="info-row-actions">
+                                <a href="#">Խմբագրել</a>
+                                <a href="#">Ջնջել</a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="empty-box">Բրենդի մասին բովանդակություն դեռ չկա։</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- SOLUTIONS -->
+            <div class="manage-section-card">
+                <div class="section-head">
+                    <h3>Լուծումներ</h3>
+                    <a href="#" class="mini-action-btn">+ Ավելացնել</a>
+                </div>
+
+                <div class="cards-grid">
+                    {% for item in solutions %}
+                        <div class="small-manage-card">
+                            <div class="small-manage-card-top">
+                                <div>
+                                    <h4>{{ item.name }}</h4>
+                                    <span>{{ item.key }}</span>
+                                </div>
+                                <div class="small-card-actions">
+                                    <a href="#">Խմբագրել</a>
+                                    <a href="#">Ջնջել</a>
+                                </div>
+                            </div>
+                            <p>{{ item.value }}</p>
+                        </div>
+                    {% empty %}
+                        <div class="empty-box">Լուծումներ դեռ չկան։</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- DIRECTIONS -->
+            <div class="manage-section-card">
+                <div class="section-head">
+                    <h3>Ուղղություններ</h3>
+                    <a href="#" class="mini-action-btn">+ Ավելացնել</a>
+                </div>
+
+                <div class="cards-grid">
+                    {% for item in directions %}
+                        <div class="small-manage-card">
+                            <div class="small-manage-card-top">
+                                <div>
+                                    <h4>{{ item.name }}</h4>
+                                    <span>{{ item.key }}</span>
+                                </div>
+                                <div class="small-card-actions">
+                                    <a href="#">Խմբագրել</a>
+                                    <a href="#">Ջնջել</a>
+                                </div>
+                            </div>
+                            <p>{{ item.value }}</p>
+                        </div>
+                    {% empty %}
+                        <div class="empty-box">Ուղղություններ դեռ չկան։</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- MEDIA -->
+            <div class="manage-section-card">
+                <div class="section-head">
+                    <h3>Մեդիա</h3>
+                    <a href="#" class="mini-action-btn">+ Ավելացնել</a>
+                </div>
+
+                {% if images or videos %}
+                    <div class="media-grid">
+                        {% for item in images %}
+                            <div class="media-card">
+                                <div class="media-preview">
+                                    <img src="{{ item.file.url }}" alt="{{ item.title|default:brand.name }}">
+                                </div>
+                                <div class="media-info">
+                                    <strong>{{ item.title|default:"Նկար" }}</strong>
+                                    <span>image</span>
+                                </div>
+                                <div class="media-actions">
+                                    <a href="{{ item.file.url }}" target="_blank">Բացել</a>
+                                    <a href="#">Ջնջել</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {% for item in videos %}
+                            <div class="media-card">
+                                <div class="media-preview video-preview">
+                                    {% if item.preview_image %}
+                                        <img src="{{ item.preview_image.url }}" alt="{{ item.title|default:brand.name }}">
+                                    {% else %}
+                                        <div class="video-placeholder">VIDEO</div>
+                                    {% endif %}
+                                </div>
+                                <div class="media-info">
+                                    <strong>{{ item.title|default:"Վիդեո" }}</strong>
+                                    <span>video</span>
+                                </div>
+                                <div class="media-actions">
+                                    <a href="{{ item.file.url }}" target="_blank">Բացել</a>
+                                    <a href="#">Ջնջել</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-box">Մեդիա դեռ չկա։</div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <aside class="brand-manage-sidebar">
+
+            <!-- IMPORTERS -->
+            <div class="manage-section-card sidebar-card">
+                <div class="section-head">
+                    <h3>Ներկայացնողներ</h3>
+                    <a href="#" class="mini-action-btn">+ Կապել</a>
+                </div>
+
+                <div class="sidebar-list">
+                    {% for rel in importer_links %}
+                        <div class="sidebar-list-row">
+                            <div class="sidebar-list-main">
+                                <strong>{{ rel.importer.company_name }}</strong>
+                                <span>Importer</span>
+                            </div>
+                            <div class="sidebar-list-actions">
+                                <a href="#">Բացել</a>
+                                <a href="#">Հեռացնել</a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="empty-box">Կապված importer չկա։</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- ALL INFO -->
+            <div class="manage-section-card sidebar-card">
+                <div class="section-head">
+                    <h3>Բոլոր ինֆոները</h3>
+                </div>
+
+                <div class="sidebar-list compact">
+                    {% for item in brand_infos %}
+                        <div class="sidebar-list-row compact-row">
+                            <div class="sidebar-list-main">
+                                <strong>{{ item.name }}</strong>
+                                <span>{{ item.info_type.name }} · {{ item.key }}</span>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="empty-box">Ինֆոներ դեռ չկան։</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<style>
+.brand-manage-page {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.brand-manage-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.brand-manage-topbar-left h1 {
+    margin: 0 0 6px;
+    font-size: 30px;
+    color: #111827;
+}
+
+.brand-manage-topbar-left p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.top-action-btn,
+.mini-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.top-action-btn {
+    height: 46px;
+    padding: 0 18px;
+    background: #111827;
+    color: #fff;
+}
+
+.mini-action-btn {
+    height: 38px;
+    padding: 0 14px;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.brand-manage-hero-card {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 20px;
+}
+
+.brand-manage-logo {
+    width: 110px;
+    height: 110px;
+    min-width: 110px;
+    border-radius: 20px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.brand-manage-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fff;
+}
+
+.brand-logo-placeholder {
+    color: #9ca3af;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.brand-manage-hero-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.brand-manage-hero-info h2 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    color: #111827;
+}
+
+.brand-manage-hero-info p {
+    margin: 0 0 14px;
+    color: #6b7280;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.brand-manage-mini-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.mini-stat {
+    min-width: 140px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 12px 14px;
+}
+
+.mini-stat span {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.mini-stat strong {
+    font-size: 20px;
+    color: #111827;
+}
+
+.brand-manage-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(300px, 0.95fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.brand-manage-main,
+.brand-manage-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.manage-section-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 18px;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.section-head h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #111827;
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: start;
+    padding: 14px;
+    border: 1px solid #eef2f7;
+    border-radius: 16px;
+    background: #fcfcfd;
+}
+
+.info-row-block {
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) auto;
+}
+
+.info-row-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-name {
+    font-weight: 700;
+    color: #111827;
+    font-size: 14px;
+}
+
+.info-key {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.info-row-value {
+    color: #374151;
+    line-height: 1.6;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.long-text {
+    white-space: normal;
+}
+
+.info-row-actions,
+.small-card-actions,
+.media-actions,
+.sidebar-list-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.info-row-actions a,
+.small-card-actions a,
+.media-actions a,
+.sidebar-list-actions a {
+    text-decoration: none;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.small-manage-card {
+    border: 1px solid #eef2f7;
+    background: #fcfcfd;
+    border-radius: 16px;
+    padding: 14px;
+}
+
+.small-manage-card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.small-manage-card h4 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    color: #111827;
+}
+
+.small-manage-card span {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.small-manage-card p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.media-card {
+    border: 1px solid #eef2f7;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fcfcfd;
+}
+
+.media-preview {
+    width: 100%;
+    height: 180px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.media-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-preview {
+    background: #111827;
+}
+
+.video-placeholder {
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.media-info {
+    padding: 12px 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.media-info strong {
+    color: #111827;
+    font-size: 14px;
+}
+
+.media-info span {
+    color: #9ca3af;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.media-actions {
+    padding: 0 12px 12px;
+}
+
+.sidebar-card .section-head h3 {
+    font-size: 18px;
+}
+
+.sidebar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar-list-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px;
+    border: 1px solid #eef2f7;
+    border-radius: 14px;
+    background: #fcfcfd;
+}
+
+.sidebar-list-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.sidebar-list-main strong {
+    color: #111827;
+    font-size: 14px;
+}
+
+.sidebar-list-main span {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.compact .sidebar-list-row {
+    padding: 10px 12px;
+}
+
+.empty-box,
+.empty-text {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.empty-box {
+    padding: 14px;
+    border: 1px dashed #d1d5db;
+    border-radius: 14px;
+    background: #fafafa;
+}
+
+@media (max-width: 1200px) {
+    .brand-manage-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .media-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .brand-manage-page {
+        padding: 14px;
+    }
+
+    .brand-manage-hero-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .brand-manage-logo {
+        width: 88px;
+        height: 88px;
+        min-width: 88px;
+    }
+
+    .info-row,
+    .info-row-block {
+        grid-template-columns: 1fr;
+    }
+
+    .cards-grid,
+    .media-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

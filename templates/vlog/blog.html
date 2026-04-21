@@ -1,0 +1,183 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobalMedex | Blog</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+{% if site_settings.logo %}
+<link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+<link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+<link rel="stylesheet" href="{% static 'Vlog/css/vlog.css' %}">
+
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<!-- HERO -->
+<section class="hero">
+
+<div class="text">
+<h1>GlobalMedex Blog</h1>
+<p>Ծանոթացեք համակարգումի վերջին նորություններին, կատարված աշխատանքներին և եղեք տեղեկացված</p>
+</div>
+
+<div class="hero-visual">
+<i class="fa-solid fa-newspaper"></i>
+</div>
+
+</section>
+
+<!-- CHIPS -->
+<div class="chip-container">
+
+<div class="chip {% if selected_section == 'all' %}active{% endif %}" data-section="all">
+Ամբողջը
+</div>
+
+{% for subsection in blog_subsections %}
+
+<div class="chip {% if selected_section|stringformat:"s" == subsection.id|stringformat:"s" %}active{% endif %}"  data-section="{{ subsection.id }}">
+
+{{ subsection.name }}
+</div>
+{% endfor %}
+
+</div>
+
+<!-- BLOG GRID -->
+<div class="vlog-grid">
+
+{% for content in page_obj.object_list %}
+<div class="card" data-section="{{ content.section.id }}">
+
+{% if content.images.first %}
+<img src="{{ content.images.first.image.url }}" alt="{{ content.title }}">
+{% else %}
+<img src="https://via.placeholder.com/600x400" alt="{{ content.title }}">
+{% endif %}
+
+<div class="card-content">
+
+<h3 class="card-title">{{ content.title }}</h3>
+
+<p class="card-date">
+{{ content.created_at|date:"d F Y" }}
+</p>
+
+<a href="{% url 'blog_detail' content.id %}" class="card-btn">
+Կարդալ
+</a>
+
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<!-- PAGINATION -->
+<div class="pagination">
+
+{% if page_obj.has_previous %}
+<a href="?page={{ page_obj.previous_page_number }}{% if selected_section %}&section={{ selected_section }}{% endif %}">
+« Նախորդ
+</a>
+{% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+
+{% if page_obj.number == num %}
+<span class="active">{{ num }}</span>
+{% else %}
+<a href="?page={{ num }}{% if selected_section %}&section={{ selected_section }}{% endif %}">
+{{ num }}
+</a>
+{% endif %}
+
+{% endfor %}
+
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}{% if selected_section %}&section={{ selected_section }}{% endif %}">
+Հաջորդ »</a>
+{% endif %}
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg">
+
+<div class="modal">
+
+<div class="modal-header" id="modalTitle">
+Blog
+</div>
+
+<div class="modal-body" id="modalContent">
+...
+</div>
+
+<div class="modal-close" onclick="closeModal()">
+Փակել
+</div>
+
+</div>
+
+</div>
+
+{% include "footer.html" %}
+
+<script>
+
+/* ================= CHIP FILTER ================= */
+const chips = document.querySelectorAll(".chip");
+
+chips.forEach(chip => {
+  chip.addEventListener("click", () => {
+    const section = chip.dataset.section;
+    // Redirect to same page with ?section=... (page resets to 1)
+    let url = new URL(window.location.href);
+    url.searchParams.set('section', section);
+    url.searchParams.set('page', 1);
+    window.location.href = url.toString();
+  });
+});
+
+/* ================= MODAL ================= */
+function openModal(title,text){
+  const modal = document.getElementById("modalBg")
+  const modalTitle = document.getElementById("modalTitle")
+  const modalContent = document.getElementById("modalContent")
+  modalTitle.innerText = title
+  modalContent.innerText = text
+  modal.style.display = "flex"
+}
+
+function closeModal(){
+  document.getElementById("modalBg").style.display = "none"
+}
+
+/* ================= CLICK OUTSIDE CLOSE ================= */
+window.onclick = function(e){
+  const modal = document.getElementById("modalBg")
+  if(e.target === modal){
+    modal.style.display = "none"
+  }
+}
+
+</script>
+
+</body>
+</html>

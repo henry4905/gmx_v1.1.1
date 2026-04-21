@@ -1,0 +1,111 @@
+{% load static %}
+{% load category_tags %}
+
+<h1>Բուժտեխնիկայի դասակարգում</h1>
+
+<div class="category-tree">
+
+    {% get_active_categories as categories %}
+
+    {% for category in categories %}
+        <div style="margin-left: {{ category.level|add:"0" }}0px; border: 1px solid #ccc; padding: 5px; margin-bottom: 5px;">
+            <form method="POST" action="{% url 'admin_edit_category' category.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="object_id" value="{{ category.id }}">
+                
+                <label>Անուն:</label>
+                <input type="text" name="name" value="{{ category.name }}" required>
+
+                <label>Slug:</label>
+                <input type="text" name="slug" value="{{ category.slug }}" required>
+
+                <label>Parent:</label>
+                <select name="parent">
+                    <option value="">--- Ոչինչ ---</option>
+                    {% for cat in categories %}
+                        {% if cat.id != category.id %}
+                            <option value="{{ cat.id }}" {% if category.parent and category.parent.id == cat.id %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+
+                <label>Level:</label>
+                <input type="number" name="level" value="{{ category.level }}" min="0">
+
+                <label>Active:</label>
+                <input type="checkbox" name="is_active" {% if category.is_active %}checked{% endif %}>
+
+                <button type="submit">Update</button>
+            </form>
+
+            <!-- Recursive children -->
+            {% if category.children.all %}
+                <div style="margin-left: 20px;">
+                    {% for child in category.children.all %}
+                        <form method="POST" action="{% url 'admin_edit_category' child.id %}" style="border:1px dashed #eee; padding:5px; margin:5px 0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="object_id" value="{{ child.id }}">
+                            
+                            <label>Անուն:</label>
+                            <input type="text" name="name" value="{{ child.name }}" required>
+
+                            <label>Slug:</label>
+                            <input type="text" name="slug" value="{{ child.slug }}" required>
+
+                            <label>Parent:</label>
+                            <select name="parent">
+                                <option value="">--- Ոչինչ ---</option>
+                                {% for cat2 in categories %}
+                                    {% if cat2.id != child.id %}
+                                        <option value="{{ cat2.id }}" {% if child.parent and child.parent.id == cat2.id %}selected{% endif %}>
+                                            {{ cat2.name }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+
+                            <label>Level:</label>
+                            <input type="number" name="level" value="{{ child.level }}" min="0">
+
+                            <label>Active:</label>
+                            <input type="checkbox" name="is_active" {% if child.is_active %}checked{% endif %}>
+
+                            <button type="submit">Update</button>
+                        </form>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h2>Ավելացնել Նոր Կատեգորիա</h2>
+<form method="POST" action="{% url 'admin_create_category' %}">
+    {% csrf_token %}
+    <label for="id_name">Անուն:</label>
+    <input type="text" name="name" id="id_name" required><br><br>
+
+    <label for="id_slug">Slug:</label>
+    <input type="text" name="slug" id="id_slug" required><br><br>
+
+    <label for="id_parent">Parent Category:</label>
+    <select name="parent" id="id_parent">
+        <option value="">--- Ոչինչ ---</option>
+        {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="id_level">Level:</label>
+    <input type="number" name="level" id="id_level" value="0" min="0"><br><br>
+
+    <label for="id_is_active">Active:</label>
+    <input type="checkbox" name="is_active" id="id_is_active" checked><br><br>
+
+    <button type="submit">Ավելացնել Կատեգորիա</button>
+</form>

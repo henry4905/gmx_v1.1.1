@@ -1,0 +1,217 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Անձնական էջ{% endblock %}</title>
+
+<!-- Favicon -->
+{% if site_settings.logo %}
+  <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+  <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+
+<link rel="stylesheet" href="{% static 'personal/css/profile_sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'personal/css/profile_base.css' %}">
+<link rel="stylesheet" href="{% static 'personal/css/settings.css' %}">
+
+
+
+<script src="{% static 'core_logic/js/modal.js' %}"></script>
+
+
+</head>
+<body>
+
+<!-- Sidebar toggle button -->
+<button class="sidebar-toggle" id="sidebarToggle">☰ Մենյու</button>
+
+<!-- HEADER -->
+{% include "header.html" %}
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+  <div class="sidebar" id="sidebar">
+    {% include "accounts/personal/profile_sidebar.html" %}
+  </div>
+
+  <div class="main-area" id="content-area">
+    {% include "accounts/personal/sections/profile_settings.html" %}
+  </div>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- FOOTER -->
+{% include "footer.html" %}
+
+
+
+
+
+<script src="{% static 'js/profile.js' %}"></script>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebarToggle');
+  const overlay = document.getElementById('overlay');
+
+  // Toggle sidebar open/close
+  toggle.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+  });
+
+  // Close sidebar on overlay click
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+  });
+
+  // Close sidebar on Escape key
+  document.addEventListener('keydown', (e) => {
+    if(e.key === "Escape" && sidebar.classList.contains('active')) {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+  });
+
+  // Menu-item click handling
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+
+            // Remove active class from all items and set for the clicked one
+            document.querySelectorAll('.menu-item')
+                .forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+
+            // Load the corresponding section
+            const section = this.getAttribute('data-section');
+            fetch(`accounts/personal/section/${section}/`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('content-area').innerHTML = html;
+                });
+
+            // Close sidebar on small screens
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+    });
+  });
+
+let currentField; // phone կամ email
+const modal = document.getElementById("editModal");
+const modalTitle = document.getElementById("modal-title");
+const input = document.getElementById("modal-input");
+const sendBtn = document.getElementById("send-code");
+const codeStep = document.getElementById("step-code");
+const valueStep = document.getElementById("step-value");
+const codeInput = document.getElementById("code-input");
+const verifyBtn = document.getElementById("verify-code");
+const modalMsg = document.getElementById("modal-message");
+
+// Բացել modal ըստ սեղմված կոճակի
+document.querySelectorAll(".edit-btn").forEach(btn => {
+  btn.addEventListener("click", function() {
+    currentField = this.dataset.field;
+    modal.style.display = "flex";
+    modalTitle.innerText = `Փոխել ${currentField === "phone" ? "հեռախոսահամարը" : "էլ․ հասցեն"}`;
+    input.value = "";
+    codeInput.value = "";
+    modalMsg.innerText = "";
+    valueStep.style.display = "flex";
+    codeStep.style.display = "none";
+  });
+});
+
+// Modal փակել
+modal.querySelector(".close").onclick = () => modal.style.display = "none";
+
+// Ուղարկել հաստատման կոդ
+sendBtn.addEventListener("click", () => {
+  const newValue = input.value.trim();
+  if(!newValue) {
+    modalMsg.innerText = "Խնդրում ենք մուտքագրել արժեքը։";
+    return;
+  }
+
+  fetch("{% url 'send_prof_verification_code' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": "{{ csrf_token }}"
+    },
+    body: JSON.stringify({ field: currentField, value: newValue })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success) {
+      valueStep.style.display = "none";
+      codeStep.style.display = "flex";
+      modalMsg.innerText = `Հաստատման կոդը ուղարկված է ձեր ${currentField === "phone" ? "հեռախոսին" : "էլ․ հասցեին"}`;
+    } else {
+      modalMsg.innerText = "Անհաջող փորձ, փորձեք կրկին։";
+    }
+  });
+});
+
+// Հաստատել կոդը
+verifyBtn.addEventListener("click", () => {
+  const code = codeInput.value.trim();
+  if(!code) {
+    modalMsg.innerText = "Մուտքագրեք հաստատման կոդը։";
+    return;
+  }
+
+  fetch("{% url 'verify_prof_code' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": "{{ csrf_token }}"
+    },
+    body: JSON.stringify({ field: currentField, code: code })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success) {
+      modalMsg.innerText = `${currentField === "phone" ? "Հեռախոսահամարը" : "Էլ․ հասցեն"} հաջողությամբ փոփոխվել է։`;
+
+      // Փոքր սպասումով modal փակել
+      setTimeout(() => {
+        modal.style.display = "none";
+
+        // DOM-ում անմիջապես նոր արժեքը փոխել՝ առանց ամբողջ էջի reload-ի
+        if(currentField === "phone") {
+          document.getElementById("phone-display").innerText = input.value;
+        } else if(currentField === "email") {
+          document.getElementById("email-display").innerText = input.value;
+        }
+
+        // մաքրել input-ը և modal message-ը հաջորդ բացման համար
+        input.value = "";
+        codeInput.value = "";
+        modalMsg.innerText = "";
+
+      }, 1200);
+
+    } else {
+      modalMsg.innerText = data.error || "Սխալ հաստատման կոդ։ Փորձեք կրկին։";
+    }
+  });
+});
+
+</script>
+
+</body>
+</html>

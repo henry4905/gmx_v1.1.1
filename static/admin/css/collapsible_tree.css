@@ -1,0 +1,21 @@
+.model-category tr td,
+.model-category tr th {
+    position: relative;
+}
+
+.model-category tr td span {
+    font-weight: bold;
+}
+
+.model-category tr.dragging {
+    opacity: 0.5;
+    background-color: #e0f7fa;
+}
+
+.model-category tr td {
+    padding-left: calc(var(--level, 0) * 20px);
+}
+
+.model-category tr td span {
+    color: #007bff;
+}

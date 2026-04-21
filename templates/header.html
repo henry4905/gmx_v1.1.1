@@ -1,0 +1,54 @@
+{% load static %}
+
+<header id="site-header">
+
+  <!-- LEFT : Logo -->
+  <div class="header-left">
+    <a href="{% url 'homepage' %}" id="logo-link">
+      GlobalMedex
+    </a>
+  </div>
+
+  <!-- CENTER : Main Navigation -->
+  <div class="header-center">
+    <nav id="main-nav">
+      <a href="{% url 'productspage' %}" class="nav-item">Ապրանքներ</a>
+      <a href="{% url 'importerspage' %}" class="nav-item">Մատակարարներ</a>
+      <a href="{% url 'standardpage' %}" class="nav-item">Ստանդարտներ</a>
+      <a href="{% url 'aboutpage' %}" class="nav-item">Մեր մասին</a>
+      <a href="{% url 'vlogpage' %}" class="nav-item">Բլոգ</a>
+
+      {% if user.is_authenticated %}
+          <a href="{% url 'welcome' %}" class="nav-item">Անձնական էջ</a>
+      {% else %}
+          <a href="{% url 'login' %}" class="nav-item">Մուտք</a>
+      {% endif %}
+
+      {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" class="nav-item nav-item-mobile-only">Դուրս գալ</a>
+      {% endif %}
+
+    </nav>
+  </div>
+
+  <!-- RIGHT : Action Button -->
+  <div class="header-right">
+      {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}" class="nav-btn">Դուրս գալ</a>
+      {% else %}
+          <a href="#" class="nav-btn">Միանալ որպես ներկրող</a>
+      {% endif %}
+  </div>
+
+  <!-- Burger -->
+  <div class="header-burger">
+      <div id="nav-toggle" class="burger">
+          <span></span>
+          <span></span>
+          <span></span>
+      </div>
+  </div>
+
+</header>
+
+<script src="{% static 'home/js/header.js' %}"></script>

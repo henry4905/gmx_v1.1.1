@@ -1,0 +1,290 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  {% if site_settings.logo %}
+    <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+  {% else %}
+    <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+  {% endif %}
+
+  <title>
+    — GlobalMedex |
+    {% if brand.seo_title %}
+      {{ brand.seo_title }}
+    {% else %}
+      {{ brand.name }} 
+    {% endif %}
+  </title>
+
+  {% if brand.seo_description %}
+    <meta name="description" content="{{ brand.seo_description }}">
+  {% elif brand.short_info %}
+    <meta name="description" content="{{ brand.short_info|striptags|truncatechars:160 }}">
+  {% endif %}
+
+  <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'importer/css/brand_detail.css' %}">
+  
+</head>
+<body>
+
+{% include "header.html" %}
+
+<main class="brand-page">
+
+  <!-- HERO -->
+  <section class="brand-hero">
+    <div class="brand-hero-bg"></div>
+
+    <div class="container brand-hero-inner">
+      <div class="brand-hero-left">
+        <div class="brand-logo-wrap">
+          {% if brand.logo %}
+            <div class="brand-logo-box">
+              <img src="{{ brand.logo.url }}" alt="{{ brand.name }}">
+            </div>
+          {% else %}
+            <div class="brand-logo-fallback">
+              {{ brand.name|slice:":2"|upper }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="brand-hero-right">
+        <span class="brand-kicker">Բժշկական բրենդ</span>
+
+        <h1 class="brand-title">{{ brand.name }}</h1>
+
+        {% if brand.short_info %}
+          <p class="brand-short-info">
+            {{ brand.short_info }}
+          </p>
+        {% endif %}
+
+        <div class="brand-meta-list">
+          {% if brand.country %}
+            <div class="brand-meta-chip">
+              <span class="meta-label">Երկիր</span>
+              <span class="meta-value">{{ brand.country }}</span>
+            </div>
+          {% endif %}
+
+          {% if brand.founded_year %}
+            <div class="brand-meta-chip">
+              <span class="meta-label">Հիմնադրվել է</span>
+              <span class="meta-value">{{ brand.founded_year }}</span>
+            </div>
+          {% endif %}
+
+          {% if media_items %}
+            <div class="brand-meta-chip">
+              <span class="meta-label">Մեդիա</span>
+              <span class="meta-value">{{ media_items|length }} նյութ</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="brand-actions">
+          {% if brand.main_info %}
+            <a href="#brand-about" class="btn-primary">Կարդալ ավելին</a>
+          {% endif %}
+
+          {% if media_items %}
+            <a href="#brand-media" class="btn-secondary">Դիտել մեդիան</a>
+          {% endif %}
+
+          {% if brand.websites %}
+            <a href="#brand-links" class="btn-light">Պաշտոնական հղումներ</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container brand-layout">
+
+    <!-- MAIN CONTENT -->
+    <section class="brand-main">
+
+      {% if brand.main_info %}
+        <section class="brand-section" id="brand-about">
+          <div class="section-head">
+            <span class="section-kicker">Ընդհանուր տեղեկատվություն</span>
+            <h2>Բրենդի մասին</h2>
+          </div>
+
+          <div class="brand-card brand-richtext">
+            {{ brand.main_info|safe }}
+          </div>
+        </section>
+      {% endif %}
+
+      {% if media_items %}
+        <section class="brand-section" id="brand-media">
+          <div class="section-head">
+            <span class="section-kicker">Վիզուալ ներկայացում</span>
+            <h2>Մեդիա</h2>
+          </div>
+
+          <div class="brand-media-grid">
+            {% for media in media_items %}
+              <article class="media-card">
+                <a
+                  href="{{ media.file.url }}"
+                  class="media-card-link"
+                  target="_blank"
+                >
+                  <div class="media-preview">
+                    {% if media.media_type == 'image' %}
+                      <img
+                        src="{{ media.file.url }}"
+                        alt="{{ media.title|default:brand.name }}"
+                        loading="lazy"
+                      >
+                    {% elif media.preview_image %}
+                      <img
+                        src="{{ media.preview_image.url }}"
+                        alt="{{ media.title|default:brand.name }}"
+                        loading="lazy"
+                      >
+                      <span class="media-type-badge">VIDEO</span>
+                    {% else %}
+                      <div class="media-video-fallback">
+                        <div class="play-icon">▶</div>
+                        <span>Վիդեո</span>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <div class="media-body">
+                    <h3>
+                      {% if media.title %}
+                        {{ media.title }}
+                      {% else %}
+                        {% if media.media_type == 'image' %}
+                          Նկար {{ forloop.counter }}
+                        {% else %}
+                          Վիդեո {{ forloop.counter }}
+                        {% endif %}
+                      {% endif %}
+                    </h3>
+
+                    <p>
+                      {% if media.media_type == 'image' %}
+                        Բացել նկարը
+                      {% else %}
+                        Դիտել վիդեոն
+                      {% endif %}
+                    </p>
+                  </div>
+                </a>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      {% if importers %}
+        <section class="brand-section" id="brand-importers">
+          <div class="section-head">
+            <span class="section-kicker">Գործընկերներ</span>
+            <h2>Ներկայացնող ընկերություններ</h2>
+          </div>
+
+          <div class="brand-importers-grid">
+            {% for importer_brand in importers %}
+              <article class="brand-card importer-card">
+                <div class="importer-top">
+                  <div class="importer-logo-fallback">
+                    {{ importer_brand.importer.company_name|slice:":2"|upper }}
+                  </div>
+
+                  <div class="importer-info">
+                    <h3>{{ importer_brand.importer.company_name }}</h3>
+
+                    {% if importer_brand.importer.is_verified or importer_brand.importer.verified_by %}
+                      <span class="importer-badge">Ստուգված գործընկեր</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="importer-actions">
+                  <a href="{% url 'importer_detail' importer_brand.importer.id %}" class="importer-link">
+                    Դիտել ընկերության էջը
+                  </a>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+    </section>
+
+    <!-- SIDEBAR -->
+    <aside class="brand-sidebar">
+
+      <div class="brand-card sidebar-card">
+        <h3>Արագ տվյալներ</h3>
+
+        <div class="sidebar-info-list">
+          {% if brand.country %}
+            <div class="sidebar-info-row">
+              <span>Երկիր</span>
+              <strong>{{ brand.country }}</strong>
+            </div>
+          {% endif %}
+
+          {% if brand.founded_year %}
+            <div class="sidebar-info-row">
+              <span>Հիմնադրման տարեթիվ</span>
+              <strong>{{ brand.founded_year }}</strong>
+            </div>
+          {% endif %}
+
+          <div class="sidebar-info-row">
+            <span>Կարգավիճակ</span>
+            <strong>
+              {% if brand.is_active %}
+                Ակտիվ
+              {% else %}
+                Ոչ ակտիվ
+              {% endif %}
+            </strong>
+          </div>
+        </div>
+      </div>
+
+      {% if brand.websites %}
+        <div class="brand-card sidebar-card" id="brand-links">
+          <h3>Պաշտոնական հղումներ</h3>
+
+          <div class="brand-links-list">
+            {% for site in brand.websites %}
+              <a href="{{ site }}" target="_blank" rel="noopener noreferrer" class="brand-link-item">
+                <span class="brand-link-text">{{ site }}</span>
+                <span class="brand-link-arrow">↗</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </aside>
+
+  </div>
+</main>
+
+{% include "footer.html" %}
+
+<script src="{% static 'importer/js/brand_detail.js' %}"></script>
+</body>
+</html>

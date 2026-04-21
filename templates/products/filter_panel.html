@@ -1,0 +1,82 @@
+<div class="filter-overlay" id="filterOverlay" aria-hidden="true">
+  <div class="filter-panel">
+
+    <button
+      type="button"
+      class="filter-close"
+      id="filterCloseBtn"
+      aria-label="Փակել"
+    >
+      &times;
+    </button>
+
+    <div class="filter-panel-inner">
+      <div class="filter-header">
+        <div class="filter-header-badge">
+          <i class="fa-solid fa-sliders"></i>
+        </div>
+
+        <h2>
+          <i class="fa-solid fa-filter"></i>
+          Ֆիլտրել ապրանքները
+        </h2>
+
+        <div class="filter-intro">
+          <p>
+            Սկզբում ընտրեք հիմնական կատեգորիան, ապա համակարգը կբացի
+            համապատասխան ենթակատեգորիաներն ու ֆիլտրերը։
+          </p>
+        </div>
+      </div>
+
+      <!-- 0 մակարդակ -->
+      <div class="filter-root-categories" id="filterRootCategories">
+        <h3 class="filter-block-title">Հիմնական կատեգորիաներ</h3>
+
+        <div class="root-category-grid">
+          {% for category in root_categories %}
+            <button
+              type="button"
+              class="root-category-card"
+              data-category-id="{{ category.id }}"
+              data-category-name="{{ category.name|escape }}"
+            >
+              <span class="root-category-icon">
+                <i class="fa-solid fa-layer-group"></i>
+              </span>
+
+              <span class="root-category-content">
+                <span class="root-category-name">
+                  {{ category.name }}
+                </span>
+
+                {% if category.description %}
+                  <span class="root-category-description">
+                    {{ category.description }}
+                  </span>
+                {% endif %}
+              </span>
+
+              <span class="root-category-arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 1+ մակարդակներ -->
+      <div
+        class="filter-levels-wizard"
+        id="filterLevelsWizard"
+        aria-hidden="true"
+      >
+        <div
+          class="filter-levels-track"
+          id="filterLevelsTrack"
+        ></div>
+      </div>
+
+    </div>
+  </div>
+</div>

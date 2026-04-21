@@ -1,0 +1,447 @@
+{% extends "adminpanel/base.html" %}
+{% load static %}
+
+{% block title %}Բրենդներ | GMX Administration{% endblock %}
+
+{% block content %}
+<div class="brands-admin-page">
+
+    <!-- TOP BAR -->
+    <div class="brands-topbar">
+        <div class="brands-topbar-left">
+            <h1>Բրենդներ</h1>
+            <p>Կառավարիր բրենդները, գտիր արագ և տես ընդհանուր վիճակը</p>
+        </div>
+
+        <div class="brands-topbar-right">
+            <a href="{% url 'dynamic_page' 'brand_add' %}" class="brand-add-btn">+ Ավելացնել բրենդ</a>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="brands-search-wrap">
+        <form method="get" class="brands-search-form">
+            <div class="brands-search-box">
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ search_query }}"
+                    placeholder="Որոնել բրենդի կամ ներկրողի անունով..."
+                >
+                <button type="submit">Որոնել</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- STATS -->
+    <div class="brands-mini-stats">
+        <div class="mini-stat-card">
+            <span class="mini-stat-label">Ընդհանուր</span>
+            <strong>{{ brands|length }}</strong>
+        </div>
+    </div>
+
+    <!-- LIST -->
+    <div class="brands-list">
+
+        {% for brand in brands %}
+        <div class="brand-row-card">
+
+            <!-- LEFT -->
+            <div class="brand-row-main">
+                <div class="brand-row-logo">
+                    {% if brand.logo %}
+                        <img src="{{ brand.logo.url }}" alt="{{ brand.name }}">
+                    {% else %}
+                        <div class="brand-row-logo-placeholder">LOGO</div>
+                    {% endif %}
+                </div>
+
+                <div class="brand-row-info">
+                    <h3>{{ brand.name }}</h3>
+
+                    {% with short_desc=brand.info_items.all %}
+                        {% if short_desc %}
+                            {% for item in short_desc %}
+                                {% if item.key == 'short_description' and item.is_active %}
+                                    <p class="brand-row-desc">{{ item.value|truncatechars:120 }}</p>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p class="brand-row-desc empty-text">Կարճ նկարագրություն դեռ ավելացված չէ։</p>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <!-- CENTER -->
+            <div class="brand-row-meta">
+                <div class="meta-badge">
+                    <span>Ինֆո</span>
+                    <strong>{{ brand.info_count }}</strong>
+                </div>
+
+                <div class="meta-badge">
+                    <span>Մեդիա</span>
+                    <strong>{{ brand.media_count }}</strong>
+                </div>
+
+                <div class="meta-badge">
+                    <span>Ներկայացնողներ</span>
+                    <strong>{{ brand.importer_count }}</strong>
+                </div>
+            </div>
+
+            <!-- IMPORTERS PREVIEW -->
+            <div class="brand-row-importers">
+                {% if brand.brand_importers.all %}
+                    {% for rel in brand.brand_importers.all|slice:":2" %}
+                        <div class="importer-chip">{{ rel.importer.company_name }}</div>
+                    {% endfor %}
+
+                    {% if brand.importer_count > 2 %}
+                        <div class="importer-chip more-chip">+{{ brand.importer_count|add:"-2" }}</div>
+                    {% endif %}
+                {% else %}
+                    <span class="empty-text">Չկա</span>
+                {% endif %}
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="brand-row-actions">
+                <a href="{% url 'dynamic_page_with_id' 'brand_manage' brand.id %}" class="action-btn">Դիտել</a>
+                <a href="{% url 'dynamic_page_with_id' 'brand_manage' brand.id %}" class="action-btn">Խմբագրել</a>
+                <a href="#" class="action-btn">Մեդիա</a>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="brands-empty-state">
+            <h3>Բրենդներ չեն գտնվել</h3>
+            <p>Փորձիր ուրիշ որոնում կամ ավելացրու նոր բրենդ։</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<style>
+.brands-admin-page {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.brands-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.brands-topbar-left h1 {
+    margin: 0 0 6px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.brands-topbar-left p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.brand-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    background: #111827;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.brand-add-btn:hover {
+    opacity: 0.9;
+}
+
+.brands-search-wrap {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.brands-search-form {
+    width: 100%;
+}
+
+.brands-search-box {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.brands-search-box input {
+    flex: 1;
+    min-width: 260px;
+    height: 48px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 14px;
+    outline: none;
+}
+
+.brands-search-box input:focus {
+    border-color: #111827;
+}
+
+.brands-search-box button {
+    height: 48px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.brands-mini-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.mini-stat-card {
+    min-width: 180px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 14px 16px;
+}
+
+.mini-stat-card strong {
+    display: block;
+    font-size: 26px;
+    color: #111827;
+    margin-top: 6px;
+}
+
+.mini-stat-label {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.brands-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.brand-row-card {
+    display: grid;
+    grid-template-columns: minmax(260px, 2.4fr) minmax(180px, 1fr) minmax(180px, 1fr) auto;
+    gap: 16px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 16px;
+}
+
+.brand-row-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.brand-row-logo {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+    border-radius: 16px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.brand-row-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fff;
+}
+
+.brand-row-logo-placeholder {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 700;
+}
+
+.brand-row-info {
+    min-width: 0;
+}
+
+.brand-row-info h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #111827;
+}
+
+.brand-row-desc {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.brand-row-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.meta-badge {
+    min-width: 80px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 10px 12px;
+    text-align: center;
+}
+
+.meta-badge span {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.meta-badge strong {
+    font-size: 18px;
+    color: #111827;
+}
+
+.brand-row-importers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.importer-chip {
+    background: #eef2ff;
+    color: #3730a3;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.more-chip {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.brand-row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    background: #fff;
+    color: #111827;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.action-btn:hover {
+    border-color: #111827;
+    background: #f9fafb;
+}
+
+.brands-empty-state {
+    background: #fff;
+    border: 1px dashed #d1d5db;
+    border-radius: 20px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.brands-empty-state h3 {
+    margin: 0 0 8px;
+    color: #111827;
+}
+
+.brands-empty-state p,
+.empty-text {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+@media (max-width: 1200px) {
+    .brand-row-card {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+    }
+
+    .brand-row-actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 640px) {
+    .brands-admin-page {
+        padding: 14px;
+    }
+
+    .brands-topbar-left h1 {
+        font-size: 24px;
+    }
+
+    .brand-row-main {
+        align-items: flex-start;
+    }
+
+    .brand-row-logo {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+    }
+
+    .brands-search-box input,
+    .brands-search-box button {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

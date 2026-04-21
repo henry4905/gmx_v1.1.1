@@ -1,0 +1,302 @@
+/* ================= ROOT ================= */
+:root{
+  --blue: #0c63e7;
+  --deep: #0a3fa3;
+  --aqua: #00c6c2;
+  --bg: #f4f8ff;
+  --text: #1b263b;
+  --shadow: 0 15px 45px rgba(0,0,0,0.12);
+  --shadow-hover: 0 25px 70px rgba(0,0,0,0.18);
+  --radius: 18px;
+  --transition: 0.3s ease;
+  --font-main: 'Inter', sans-serif;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-main);
+}
+
+body{
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ================= HERO ================= */
+.hero{
+  padding: 150px 50px 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  background: linear-gradient(120deg, var(--deep), var(--blue), var(--aqua));
+  color: white;
+  border-radius: 0 0 60px 60px;
+}
+
+.hero h1{
+  font-size: 50px;
+  margin-bottom: 18px;
+  line-height: 1.2;
+}
+
+.hero p{
+  font-size: 19px;
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+.hero-visual{
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 35px 90px rgba(0,0,0,0.3);
+  transition: transform var(--transition);
+}
+
+.hero-visual i{
+  font-size: 120px;
+}
+
+.hero-visual:hover{
+  transform: scale(1.05);
+}
+
+/* ================= CHIPS ================= */
+.chip-container{
+  display: flex;
+  gap: 14px;
+  padding: 30px 50px;
+  overflow-x: auto;
+}
+
+.chip{
+  padding: 12px 22px;
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.chip:hover,
+.chip.active{
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+/* ================= BLOG GRID ================= */
+.vlog-grid{
+  padding: 35px 50px;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* ================= CARD ================= */
+.card{
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover{
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* image */
+.card img{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.card:hover img{
+  transform: scale(1.08);
+}
+
+/* content */
+.card-content{
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* title */
+.card-title{
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* date */
+.card-date{
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 14px;
+}
+
+/* button */
+.card-btn{
+  margin-top: auto;
+  padding: 10px 18px;
+  background: var(--blue);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.card-btn:hover{
+  background: var(--deep);
+}
+
+/* ================= MODAL ================= */
+.modal-bg{
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 999;
+}
+
+.modal{
+  background: white;
+  width: 100%;
+  max-width: 700px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  animation: modalShow 0.3s ease;
+}
+
+@keyframes modalShow{
+  from{opacity: 0; transform: scale(0.95);}
+  to{opacity: 1; transform: scale(1);}
+}
+
+.modal-header{
+  background: var(--blue);
+  color: white;
+  padding: 20px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.modal-body{
+  padding: 24px;
+  line-height: 1.8;
+  font-size: 16px;
+  color: #222;
+}
+
+.modal-close{
+  padding: 16px;
+  text-align: center;
+  background: var(--aqua);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-close:hover{
+  background: var(--deep);
+}
+
+/* ================= PAGINATION ================= */
+.pagination{
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 45px 0;
+  flex-wrap: wrap;
+}
+
+.pagination a,
+.pagination span{
+  padding: 9px 16px;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 15px;
+  transition: var(--transition);
+}
+
+.pagination a:hover{
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+.pagination .active{
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .hero{
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .vlog-grid{
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media(max-width:500px){
+  .vlog-grid{
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+  }
+
+  .card img{
+    height: 160px;
+  }
+
+  .hero h1{
+    font-size: 34px;
+  }
+
+  .hero p{
+    font-size: 16px;
+  }
+
+  .chip{
+    font-size: 14px;
+    padding: 10px 18px;
+  }
+
+  .card-btn{
+    font-size: 13px;
+    padding: 9px 16px;
+  }
+}

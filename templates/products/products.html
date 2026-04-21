@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GlobalMedex | Products</title>
+
+<meta name="description" content="GlobalMedex ապրանքների բաժնում ներկայացված են բժշկական սարքավորումներ, համակարգեր և նյութեր՝ արագ որոնման, խելացի ֆիլտրերի և ճշգրիտ ընտրության հնարավորությամբ։">
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+{% if site_settings.logo %}
+<link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+<link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "GlobalMedex Products",
+  "url": "{{ request.build_absolute_uri }}",
+  "description": "Բժշկական սարքավորումների և համակարգերի կառուցվածքային ցուցակ GlobalMedex հարթակում։"
+}
+</script>
+
+
+<link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+<link rel="stylesheet" href="{% static 'products/css/productspage.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'products/css/filter-panel.css' %}">
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<!-- Hero -->
+<section class="hero">
+  <div class="text">
+    <h1>Ապրանքներ</h1>
+    <p>Բոլոր ապրանքները կառուցված են GMX ստանդարտներով և դասակարգմամբ՝ ապահովելով արագ որոնում, խելացի ֆիլտրում և ճշգրիտ ընտրություն։</p>
+  </div>
+  <div class="hero-visual"><i class="fa-solid fa-box"></i></div>
+</section>
+
+<!-- Products Section -->
+<section class="section">
+  
+
+  <!-- Top Controls -->
+  <div class="products-controls">
+    <input
+      type="text"
+      id="productsSearchInput"
+      placeholder="Մուտքագրեք անուն կամ արտիկուլ..."
+    >
+
+    <button type="button" onclick="searchProducts()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+
+    <button type="button" onclick="openFilter()">
+      <i class="fa-solid fa-filter"></i> Ֆիլտրել
+    </button>
+  </div>
+
+  <div class="products-grid" id="productsGrid">
+
+    {% for product in products %}
+    <a href="{% url 'product_detail' product.id %}" class="product-card-link">
+
+      <div class="product-card">
+
+        {% if product.main_image %}
+          {% with product.main_image.0 as main_media %}
+            <div class="product-image">
+              <img src="{{ main_media.thumbnail.url }}" alt="{{ product.name }}">
+            </div>
+          {% endwith %}
+        {% else %}
+          <div class="product-image">
+            <img src="{% static 'images/no-image.jpg' %}" alt="No image">
+          </div>
+        {% endif %}
+
+        <div class="product-info">
+          <h4>{{ product.name }}</h4>
+          <span class="more-btn">Ավելին</span>
+        </div>
+
+      </div>
+
+    </a>
+    {% empty %}
+      <p id="productsEmptyState">Ապրանքներ չեն գտնվել։</p>
+    {% endfor %}
+
+  </div>
+
+  <!-- Pagination -->
+  {% if products.paginator.num_pages > 1 %}
+  <div class="pagination" id="productsPagination">
+
+    {% if products.has_previous %}
+      <a href="?page={{ products.previous_page_number }}"><button type="button">«</button></a>
+    {% endif %}
+
+    {% if page_range.start > 1 %}
+      <a href="?page=1"><button type="button">1</button></a>
+      <span>...</span>
+    {% endif %}
+
+    {% for num in page_range %}
+      {% if products.number == num %}
+        <button type="button" class="active">{{ num }}</button>
+      {% else %}
+        <a href="?page={{ num }}"><button type="button">{{ num }}</button></a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_range.stop <= total_pages %}
+      <span>...</span>
+      <a href="?page={{ total_pages }}"><button type="button">{{ total_pages }}</button></a>
+    {% endif %}
+
+    {% if products.has_next %}
+      <a href="?page={{ products.next_page_number }}"><button type="button">»</button></a>
+    {% endif %}
+
+  </div>
+  {% else %}
+  <div class="pagination" id="productsPagination" style="display: none;"></div>
+  {% endif %}
+
+</section>
+
+<!-- Filter Overlay -->
+{% include "products/filter_panel.html" %}
+
+{% include "footer.html" %}
+
+<script src="{% static 'products/js/productspage.js' %}"></script>
+<script src="{% static 'products/js/filter.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GlobalMedex | Մեր մասին</title>
+
+  <meta name="description" content="GlobalMedex-ը բժշկական սարքավորումների և տեխնոլոգիաների կառուցվածքային, ստանդարտացված և համադրելի ներկայացման հարթակ է՝ նախատեսված մասնագիտական օգտագործման և հիմնավորված որոշումների համար։">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+  {% if site_settings.logo %}
+    <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+  {% else %}
+    <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+  {% endif %}
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "GlobalMedex",
+    "url": "{{ request.build_absolute_uri }}",
+    "logo": "{% if site_settings.logo %}{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'icons/logo.ico' %}{% endif %}"
+  }
+  </script>
+
+  <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'about/css/about.css' %}">
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="about-hero__content">
+    <span class="about-hero__label">GlobalMedex</span>
+    <h1>Մեր մասին</h1>
+    <p>
+      GlobalMedex-ը բժշկական սարքերի, համակարգերի և հարակից նյութերի
+      կառուցվածքային, ստանդարտացված և համադրելի ներկայացման հարթակ է։
+      Այն ձևավորվում է որպես համակարգ, որտեղ տվյալները դառնում են
+      ոչ միայն հասկանալի, այլ նաև կիրառելի՝ մասնագիտական և գործնական մակարդակներում։
+    </p>
+  </div>
+
+  <div class="about-hero__visual">
+    <div class="hero-orbit">
+      <div class="hero-orbit__core">
+        <div class="hero-orbit__icon">✚</div>
+        <span>GMX</span>
+      </div>
+
+      <div class="hero-orbit__card hero-orbit__card--top">
+        <strong>Դասակարգում</strong>
+        <p>Հստակ կառուցվածք</p>
+      </div>
+
+      <div class="hero-orbit__card hero-orbit__card--right">
+        <strong>Ստանդարտներ</strong>
+        <p>Միասնական մոտեցում</p>
+      </div>
+
+      <div class="hero-orbit__card hero-orbit__card--bottom">
+        <strong>Համեմատելիություն</strong>
+        <p>Վերլուծելի տվյալներ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<section class="about-main">
+
+  <!-- WHY -->
+  <section class="about-block about-block--split">
+    <div class="about-block__text">
+      <span class="block-label">Ինչու ստեղծվեց GlobalMedex-ը</span>
+      <h2>Բժշկական տեխնոլոգիաների ներկայացման նոր մակարդակ</h2>
+
+      <p>
+        Բժշկական սարքերի և լուծումների վերաբերյալ տեղեկատվությունը հաճախ
+        ներկայացվում է տարբեր ձևաչափերով և առանց միասնական կառուցվածքի,
+        ինչը բարդացնում է համեմատությունը, ընտրությունը և գնահատումը։
+      </p>
+
+      <p>
+        GlobalMedex-ը ստեղծվել է այդ խնդիրները լուծելու համար՝
+        ձևավորելով միասնական միջավայր, որտեղ սարքերը դասակարգվում են,
+        նկարագրվում են ստանդարտացված պարամետրերով և ներկայացվում են
+        համադրելի ձևով։
+      </p>
+
+      <p>
+        Հարթակը նպատակ ունի դառնալ գործիք ոչ միայն տեղեկատվության դիտման,
+        այլ նաև վերլուծության, որոշումների կայացման և պրոֆեսիոնալ աշխատանքի համար։
+      </p>
+    </div>
+
+    <div class="about-block__side-card">
+      <div class="side-card">
+        <h3>Մեր նպատակը</h3>
+        <p>
+          Ստեղծել գլոբալ մակարդակի համակարգ, որտեղ բժշկական սարքերի
+          տվյալները ներկայացվում են ստանդարտացված, կառուցվածքային և
+          կիրառելի ձևով՝ ապահովելով ճշգրիտ ընտրություն և հիմնավորված որոշումներ։
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPROACH -->
+  <section class="about-block">
+    <div class="section-heading center">
+      <span class="block-label">Մեր մոտեցումը</span>
+      <h2>Ինչով է առանձնանում GlobalMedex-ը</h2>
+      <p>
+        Հարթակի հիմքում տվյալների ճիշտ կազմակերպումն է, դասակարգումը և
+        դրանց պրոֆեսիոնալ կիրառելիությունը։
+      </p>
+    </div>
+
+    <div class="about-values">
+
+      <div class="value-card">
+        <h3>Դասակարգման համակարգ</h3>
+        <p>
+          Բոլոր սարքերը դասակարգվում են ոլորտային և տեխնիկական չափանիշներով,
+          ապահովելով հստակ կառուցվածք և արագ կողմնորոշում։
+        </p>
+      </div>
+
+      <div class="value-card">
+        <h3>Ստանդարտացված պարամետրեր</h3>
+        <p>
+          Տվյալները ներկայացվում են միասնական պարամետրերով՝
+          համապատասխան միջազգային մոտեցումներին։
+        </p>
+      </div>
+
+      <div class="value-card">
+        <h3>Համեմատման հնարավորություն</h3>
+        <p>
+          Սարքերը և լուծումները հնարավոր է գնահատել նույն հիմքով՝
+          առանց տեղեկատվական խառնաշփոթի։
+        </p>
+      </div>
+
+      <div class="value-card">
+        <h3>Դինամիկ ֆիլտրացիա</h3>
+        <p>
+          Հարթակը թույլ է տալիս արագ գտնել անհրաժեշտ լուծումները՝
+          ըստ տեխնիկական և մասնագիտական պարամետրերի։
+        </p>
+      </div>
+
+      <div class="value-card">
+        <h3>Տենդերային կիրառելիություն</h3>
+        <p>
+          Տվյալները կարող են օգտագործվել գնահատման, գնումների և
+          տենդերային գործընթացներում։
+        </p>
+      </div>
+
+      <div class="value-card">
+        <h3>Վերլուծական արժեք</h3>
+        <p>
+          Տվյալները ներկայացվում են այնպես, որ հնարավոր լինի իրականացնել
+          խորքային վերլուծություն և ճիշտ ընտրություն։
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- AUDIENCE -->
+  <section class="about-block">
+    <div class="section-heading center">
+      <span class="block-label">Ում համար է</span>
+      <h2>Հարթակ տարբեր մասնագիտական դերերի համար</h2>
+      <p>
+        GlobalMedex-ը նախատեսված է ոլորտի բոլոր մասնակիցների համար։
+      </p>
+    </div>
+
+    <div class="about-audience">
+
+      <div class="audience-card">
+        <h3>Մատակարարների համար</h3>
+        <p>
+          Ապրանքների պրոֆեսիոնալ և կառուցվածքային ներկայացում։
+        </p>
+      </div>
+
+      <div class="audience-card">
+        <h3>Բուժհաստատությունների համար</h3>
+        <p>
+          Հստակ ընտրություն և տեխնիկական համեմատություն։
+        </p>
+      </div>
+
+      <div class="audience-card">
+        <h3>Մասնագետների համար</h3>
+        <p>
+          Տեխնիկական տվյալների համակարգված և հասկանալի միջավայր։
+        </p>
+      </div>
+
+      <div class="audience-card">
+        <h3>Գնահատման և գնումների համար</h3>
+        <p>
+          Տվյալների օգտագործում տենդերների և որոշումների կայացման մեջ։
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="about-statement">
+    <div class="about-statement__inner">
+      <span class="block-label">GlobalMedex-ի գաղափարը</span>
+      <h2>
+        GlobalMedex — համակարգ, որտեղ բժշկական տեխնոլոգիաները
+        դառնում են հասկանալի, համադրելի և կիրառելի։
+      </h2>
+    </div>
+  </section>
+
+</section>
+
+{% include "footer.html" %}
+
+</body>
+</html>

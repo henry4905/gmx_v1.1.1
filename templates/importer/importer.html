@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hy">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GlobalMedex | Importers</title>
+
+  <meta name="description" content="GlobalMedex-ի մատակարարների բաժնում ներկայացված են վստահելի բժշկական ներկրողներ և գործընկեր ընկերություններ՝ որոնման և բրենդների միջոցով արագ գտնելու հնարավորությամբ։">
+
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+
+
+  {% if site_settings.logo %}
+    <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+  {% else %}
+    <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+  {% endif %}
+
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "GlobalMedex Importers",
+    "url": "{{ request.build_absolute_uri }}",
+    "description": "GlobalMedex հարթակի բժշկական ներկրողների և մատակարարների կառուցվածքային ցուցակ։"
+  }
+  </script>
+
+  <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'importer/css/importer.css' %}">
+</head>
+
+<body>
+
+  {% include "header.html" %}
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <span class="hero-badge">GlobalMedex Network</span>
+
+        <h1>Վստահելի բժշկական մատակարարների հարթակ</h1>
+
+        <p>
+          Միացեք GlobalMedex-ին և ներկայացրեք ձեր ընկերությունը  պրոֆեսիոնալ,
+           վստահելի և  ժամանակակից միջավայրում։
+        </p>
+
+        <div class="hero-cta">
+          <button class="btn" id="openJoinHero" type="button">
+            Միանալ որպես մատակարար
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-orb hero-orb-one"></div>
+        <div class="hero-orb hero-orb-two"></div>
+
+        <div class="hero-panel hero-panel-main">
+          <span class="hero-panel-label">GlobalMedex</span>
+          <strong>Importers Directory</strong>
+          <small>Structured • Trusted • Modern</small>
+        </div>
+
+        <div class="hero-panel hero-panel-float hero-panel-float-one">
+          <span>Verified Partners</span>
+        </div>
+
+        <div class="hero-panel hero-panel-float hero-panel-float-two">
+          <span>Brand Visibility</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <!-- INTRO -->
+    <section class="section-head">
+      <div class="section-head-left">
+        <span class="section-kicker">Importers Directory</span>
+        <h2>Բացահայտեք վստահելի մատակարարներին</h2>
+      </div>
+
+      <p>
+        Օգտագործեք որոնումը՝ ընկերություն կամ բրենդ արագ գտնելու համար։
+      </p>
+    </section>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <div class="control-search">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Փնտրել ընկերություն կամ բրենդ..."
+          aria-label="Փնտրել ընկերություն կամ բրենդ"
+        >
+      </div>
+
+      <div class="control-filters">
+        <button id="clearFilters" type="button" class="btn small clear-btn">
+          Մաքրել
+        </button>
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <section id="importersList">
+      <div id="grid" class="grid">
+
+        {% for importer in importers %}
+          <article
+            class="card importer-card"
+            data-company="{{ importer.company_name|lower }}"
+            data-phone="{{ importer.phone|default:''|lower }}"
+            data-brands="{% for ib in importer.importer_brands.all %}{{ ib.brand.name|lower }} {% endfor %}"
+          >
+            <a
+              href="{% url 'importer_detail' importer.slug %}"
+              class="card-link-overlay"
+              aria-label="{{ importer.company_name }} էջ"
+            ></a>
+
+            <div class="card-top">
+              <div class="logo-box logo-box-large">
+                {% if importer.logo %}
+                  <img src="{{ importer.logo.url }}" alt="{{ importer.company_name }}">
+                {% else %}
+                  <span>{{ importer.company_name|slice:":2"|upper }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="card-body">
+              <h3 class="company-title">{{ importer.company_name }}</h3>
+
+              {% if importer.phone %}
+                <div class="meta-row">
+                  <span class="meta">Հեռախոս՝ {{ importer.phone }}</span>
+                </div>
+              {% endif %}
+
+              <div class="brands-list">
+                {% for ib in importer.importer_brands.all %}
+                  <a href="{% url 'brand_detail' ib.brand.id %}" class="brand-tag">
+                    {{ ib.brand.name }}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="card-bottom">
+              <span class="card-view-link">Դիտել էջը</span>
+            </div>
+          </article>
+        {% empty %}
+          <div class="empty-state">
+            <h3>Ներկրողներ դեռ չկան</h3>
+            <p>Տվյալ պահին ցուցադրման համար ընկերություններ չեն գտնվել։</p>
+          </div>
+        {% endfor %}
+
+      </div>
+
+      <div id="noResults" class="empty-state" style="display:none;">
+        <h3>Արդյունք չի գտնվել</h3>
+        <p>Փորձեք այլ անուն կամ բրենդ։</p>
+      </div>
+    </section>
+
+    <!-- BRANDS -->
+    <section class="brands brands-showcase">
+      <div class="brands-head">
+        <span class="section-kicker">Brand Visibility</span>
+        <h2>Ապրանքանիշեր</h2>
+      </div>
+
+      <div class="brands-showcase-shell">
+        <button class="brands-nav brands-nav-prev" type="button" id="brandPrev" aria-label="Նախորդ բրենդ">
+          ‹
+        </button>
+
+        <div class="brands-stage" id="brandsStage">
+          <div class="brands-carousel" id="brandsCarousel">
+            {% for brand in brands %}
+              <a href="{% url 'brand_detail' brand.id %}" class="brand-card">
+                <div class="brand-card-inner">
+                  <div class="brand-card-logo">
+                    {% if brand.logo %}
+                      <img src="{{ brand.logo.url }}" alt="{{ brand.name }}">
+                    {% else %}
+                      <span>{{ brand.name }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="brand-card-name">{{ brand.name }}</div>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <button class="brands-nav brands-nav-next" type="button" id="brandNext" aria-label="Հաջորդ բրենդ">
+          ›
+        </button>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="cta-content">
+        <span class="section-kicker section-kicker-light">Grow With GlobalMedX</span>
+        <h2>Աճեցրու քո ներկայությունը GlobalMedX-ով</h2>
+        <p>
+          Ներկայացրու քո ընկերությունը պարզ, ուժեղ և պրոֆեսիոնալ ձևով։
+        </p>
+      </div>
+
+      <div class="cta-actions">
+        <button class="btn" id="openJoin2" type="button">
+          Սկսել հիմա
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  {% include "footer.html" %}
+
+  <script src="{% static 'importer/js/importer.js' %}"></script>
+</body>
+</html>

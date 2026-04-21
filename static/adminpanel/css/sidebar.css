@@ -1,0 +1,166 @@
+/* Sidebar container */
+.sidebar {
+
+    transition: transform 0.3s ease;
+
+    width: 250px;
+    height: 100vh;
+    background-color: #E6F7FF; /* թեթև բաց կապույտ, ավելի մաքուր */
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    border-right: 1px solid #c0e0f0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sidebar.closed{
+    transform: translateX(-100%);
+}
+
+/* Logo section */
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    padding: 0 20px 25px 20px;
+}
+
+.sidebar-logo img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 6px;
+}
+
+.sidebar-logo span {
+    font-size: 22px;
+    font-weight: bold;
+    color: #003d5c;
+}
+
+/* Menu container */
+.menu {
+    margin-top: 10px;
+    max-height: calc(100vh - 85px); /* sidebar-logo + top padding */
+    overflow-y: auto;
+    padding-right: 5px;
+    
+
+}
+
+/* Menu items */
+.menu-item {
+    margin-bottom: 6px;
+}
+
+.menu-title {
+    padding: 12px 16px;
+    cursor: pointer;
+    background-color: #ffffff; /* white main item */
+    color: #003d5c;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Hover effect for main items */
+.menu-title:hover {
+    background-color: #d0ebff;
+    transform: translateX(3px);
+}
+
+/* Submenu container */
+.submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px;
+    margin-top: 5px;
+
+}
+
+/* Submenu links */
+.submenu a {
+    padding: 8px 12px;
+    text-decoration: none !important;
+    color: #000000; /* black text for visibility */
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+
+}
+
+/* Hover for submenu links */
+.submenu a:hover {
+    background-color: #cceeff;
+    transform: translateX(4px);
+}
+
+/* Admin name */
+.admin-name {
+    display: block;
+    padding: 12px 16px;
+    font-weight: 600;
+    color: #003d5c;
+    margin-bottom: 10px;
+}
+
+/* Logout button */
+.logout-btn {
+    display: block;
+    margin: 0 16px 15px 16px;
+    padding: 8px 10px;
+    background-color: #ffebeb;
+    color: #b30000;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #ffcaca;
+}
+
+/* Scrollbar style */
+.menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.menu::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+
+.menu-item:last-child {
+    margin-bottom: 50px; /* փոքր «բարձրացում» վերջին տարրի համար */
+}
+
+/* Handle button */
+.sidebar-handle{
+    position:absolute;
+    top:50%;
+    right:-12px;
+    width:12px;
+    height:60px;
+    background:#0c63e7;
+    border-radius:0 6px 6px 0;
+    cursor:pointer;
+    transform:translateY(-50%);
+    box-shadow:2px 2px 6px rgba(0,0,0,0.2);
+    transition:0.3s;
+}
+
+/* Hover */
+.sidebar-handle:hover{
+    width:16px;
+}

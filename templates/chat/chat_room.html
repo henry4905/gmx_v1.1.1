@@ -1,0 +1,121 @@
+
+{% extends "chat/chat_base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="chat-wrapper">
+
+    <!-- Sidebar (զրույցների ցուցակ) -->
+    <aside class="chat-sidebar">
+        <h3>Conversations</h3>
+
+        {% for conv in conversations %}
+
+            <a href="{% url 'chat_room' conv.id %}" class="chat-user {% if conversation and conv.id == conversation.id %}active{% endif %}">
+
+                <span class="user-name">
+                    {% if conv.user1 == request.user %}
+                        {{ conv.user2.first_name}} {{ conv.user2.last_name}}
+                    {% else %}
+                        {{ conv.user1.first_name}} {{ conv.user1.last_name}}
+                    {% endif %}
+                </span>
+                <span class="unread-dot"></span>
+
+            </a>
+
+        {% empty %}
+            <p>No conversations yet.</p>
+        {% endfor %}
+    </aside>
+
+
+    <!-- Main chat area -->
+    <section class="chat-main">
+
+        {% if conversation %}
+            <!-- Եթե conversation ընտրված է -->
+
+            <div class="chat-messages" id="chatMessages">
+                {% for message in messages %}
+                    <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+                        <p>{{ message.text }}</p>
+                        <span>{{ message.timestamp|time:"H:i" }}</span>
+                    </div>
+                {% empty %}
+                    <p class="no-messages">No messages yet</p>
+                {% endfor %}
+            </div>
+
+            <form method="POST" class="chat-input">
+                {% csrf_token %}
+                <input type="text" name="text" placeholder="Type a message..." required>
+                <button type="submit">Send</button>
+            </form>
+
+        {% else %}
+            <!-- Եթե conversation ընտրված չէ -->
+            <div class="chat-empty">
+                <h2>Select a conversation</h2>
+                <p>Choose a chat from the left panel</p>
+            </div>
+        {% endif %}
+
+    </section>
+
+</div>
+
+<script>
+const conversationId = "{{ conversation.id }}";
+const userId = "{{ request.user.id }}";
+
+if (conversationId) {
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + conversationId + '/'
+    );
+
+    const chatMessages = document.getElementById('chatMessages');
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Scroll to bottom on page load
+    scrollToBottom();
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const messageEl = document.createElement('div');
+        messageEl.classList.add('message');
+        if (data.sender_id == userId) {
+            messageEl.classList.add('sent');
+        } else {
+            messageEl.classList.add('received', 'unread'); // նոր message
+        }
+        messageEl.innerHTML = `<p>${data.message}</p><span>Now</span>`;
+        chatMessages.appendChild(messageEl);
+
+        // Եթե user-ը արդեն scroll-ի վերջում է → ավտոմատ scroll անել
+        if (chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50) {
+            scrollToBottom();
+            messageEl.classList.remove('unread'); // նշումը ջնջել
+        }
+    };
+
+    document.querySelector('.chat-input').onsubmit = function(e) {
+        e.preventDefault();
+        const input = document.querySelector('.chat-input input[name="text"]');
+        const message = input.value;
+        if (message.trim() === '') return;
+        chatSocket.send(JSON.stringify({'message': message}));
+        input.value = '';
+    };
+}
+
+
+</script>
+
+
+{% endblock %}

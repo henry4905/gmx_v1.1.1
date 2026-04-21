@@ -1,0 +1,181 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Գրանցում</title>
+
+<link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+{% if site_settings.logo %}
+  <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+  <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+</head>
+<body>
+
+<div class="auth-box">
+  <h1>Գրանցում</h1>
+  <p>Ընտրեք Ձեր օգտատիրոջ տեսակը</p>
+
+  <!-- User type dropdown -->
+  <div class="select-box" id="seldiv">
+    <div class="select-btn" id="selectBtn">
+      <span id="selectedText">Ընտրել տեսակը</span>
+      <span class="arrow"></span>
+    </div>
+    <div class="select-list" id="selectList">
+      <div data-type="worker">Բուժաշխատող</div>
+      <div data-type="facility">Բուժհաստատություն</div>
+      <div data-type="importer">Ներմուծող/Արտադրող</div>
+    </div>
+  </div>
+
+  <!-- Worker form -->
+  <div class="reg-card" id="worker">
+    <h3>Բուժաշխատողի գրանցում</h3>
+    <div class="error-msg" id="workerError" style="display:none;">Խնդրում ենք լրացնել պարտադիր դաշտերը</div>
+
+    <input type="text" id="w_firstname" placeholder="Անուն" required>
+    <input type="text" id="w_lastname" placeholder="Ազգանուն" required>
+    <input type="text" id="w_fathername" placeholder="Հայրանուն" required>
+
+    <div style="display:flex; gap:8px; margin-bottom:12px;">
+      <select id="w_country_code" style="width:120px; flex:none;">
+        <option value="+374">+374</option>
+        <option value="+7">+7</option>
+        <option value="+1">+1</option>
+        <option value="+44">+44</option>
+        <option value="+49">+49</option>
+        <option value="+33">+33</option>
+        <option value="+39">+39</option>
+        <option value="+81">+81</option>
+        <option value="+91">+91</option>
+        <option value="+61">+61</option>
+      </select>
+      <input type="tel" id="w_phone" placeholder="Հեռախոսահամար" required style="flex:1;">
+    </div>
+
+    <input type="email" id="w_email" placeholder="Էլ-հասցե" required>
+
+    <!-- Birthday -->
+    <div class="birthday">
+      <div class="b-group">
+        <label>Տարի</label>
+        <select id="w_birth_year"></select>
+      </div>
+      <div class="b-group">
+        <label>Ամիս</label>
+        <select id="w_birth_month"></select>
+      </div>
+      <div class="b-group">
+        <label>Օր</label>
+        <select id="w_birth_day"></select>
+      </div>
+    </div>
+
+
+    <button id="workerSubmitBtn" disabled>Հաստատել</button>
+  </div>
+
+  <!-- Facility form -->
+  <div class="reg-card" id="facility">
+    <h3>Բուժհաստատության գրանցում</h3>
+    <div class="error-msg" id="facilityError" style="display:none;"></div>
+
+    <input type="text" id="f_name" placeholder="Բուժհաստատության անուն" required>
+    <input type="email" id="f_email" placeholder="Էլ-հասցե" required>
+    <input type="text" id="f_firstname" placeholder="Գրանցող անձի անուն" required>
+    <input type="text" id="f_lastname" placeholder="Գրանցող անձի ազգանուն" required>
+
+    <div style="display:flex; gap:8px; margin-bottom:12px;">
+      <select id="f_country_code" style="width:120px; flex:none;">
+        <option value="+374">+374</option>
+        <option value="+7">+7</option>
+        <option value="+1">+1</option>
+        <option value="+44">+44</option>
+        <option value="+49">+49</option>
+        <option value="+33">+33</option>
+        <option value="+39">+39</option>
+        <option value="+81">+81</option>
+        <option value="+91">+91</option>
+        <option value="+61">+61</option>
+      </select>
+      <input type="tel" id="f_phone" placeholder="Գրանցող անձի հեռախոսահամար" required style="flex:1;"pattern="[1-9]+" inputmode="numeric"title="Մուտքագրել միայն թվեր">
+    </div>
+
+
+    <button id="f_submit" disabled>Հաստատել</button>
+  </div>
+
+  <!-- Importer form -->
+  <div class="reg-card" id="importer">
+
+    <h3>Ներմուծողի / Արտադրողի գրանցում</h3>
+    <div class="error-msg" id="intError" style="display:none;"></div>
+
+    <input type="text" id="i_company" placeholder="Ընկերության անուն" required>
+    <input type="email" id="i_email" placeholder="Էլ-հասցե" required>
+
+    <input type="text" id="i_firstname" placeholder="Գրանցող անձի անուն" required>
+    <input type="text" id="i_lastname" placeholder="Գրանցող անձի ազգանուն" required>
+
+    <div style="display:flex; gap:8px; margin-bottom:12px;">
+      <select id="i_country_code" style="width:120px; flex:none;">
+        <option value="+374">+374</option>
+        <option value="+7">+7</option>
+        <option value="+1">+1</option>
+        <option value="+44">+44</option>
+        <option value="+49">+49</option>
+        <option value="+33">+33</option>
+        <option value="+39">+39</option>
+        <option value="+81">+81</option>
+        <option value="+91">+91</option>
+        <option value="+61">+61</option>
+      </select>
+      <input type="tel" id="i_phone" placeholder="Կոնտակտային հեռախոսահամար" required style="flex:1;">
+    </div>
+
+
+    <button id="i_submit" disabled>Հաստատել</button>
+
+  </div>
+
+
+<!-- Password -->
+<div class="user-password">
+  <input type="password" id="i_password" placeholder="Գաղտնաբառ" required>
+  <input type="password" id="i_confirm" placeholder="Կրկնել գաղտնաբառը" required>
+
+  <div class="rules">
+    <div class="rule" id="i_len"><div class="icon">✕</div> Առնվազն 8 նշան</div>
+    <div class="rule" id="i_upper"><div class="icon">✕</div> Առնվազն մեկ մեծատառ</div>
+    <div class="rule" id="i_special"><div class="icon">✕</div> Առնվազն մեկ հատուկ նշան (!@#$%)</div>
+    <div class="rule" id="i_match"><div class="icon">✕</div> Գաղտնաբառերը համընկնում են</div>
+    <button id="passwordSubmitBtn">Հաստատել գաղտնաբառը</button> 
+  </div>
+</div>
+
+
+
+  <!-- Phone verification -->
+  <div id="phoneVerification" style="display:none; margin-top:20px;">
+    <p>Մուտքագրեք SMS կոդը, որը ուղարկվել է ձեր հեռախոսին:</p>
+    <input type="text" id="smsCode" placeholder="6-անիշ կոդը">
+    <button id="verifyCodeBtn">Հաստատել կոդը</button>
+    <p>Կոդի գործողության ժամանակը մնացել է <span id="timer">60</span> վրկ.</p>
+    <button id="resendCodeBtn" style="display:none;">Ուղարկել նոր կոդ</button>
+  </div>
+
+</div>
+
+<script src="{% static 'accounts/js/register.js' %}"></script>
+
+</body>
+</html>

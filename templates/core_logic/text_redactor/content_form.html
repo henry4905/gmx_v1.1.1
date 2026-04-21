@@ -1,0 +1,47 @@
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.code.label_tag }} {{ form.code }} <br><br>
+    {{ form.title.label_tag }} {{ form.title }} <br><br>
+    {{ form.section.label_tag }} {{ form.section }} <br><br>
+
+    <label>Տեքստ</label><br>
+
+    <!-- Toolbar -->
+    <button type="button" onclick="formatText('bold')"><b>B</b></button>
+    <button type="button" onclick="formatText('italic')"><i>I</i></button>
+
+    <input type="color" onchange="setColor(this.value)">
+
+    <br><br>
+
+    <!-- Editable Area -->
+    <div id="editor"
+         contenteditable="true"
+         style="border:1px solid #ccc; padding:10px; min-height:150px;">
+    </div>
+
+    <!-- Hidden textarea (database-ի համար) -->
+    <textarea name="content" id="hiddenContent" hidden></textarea>
+
+    <br>
+    {{ form.is_active.label_tag }} {{ form.is_active }} <br><br>
+
+    <button type="submit">Պահպանել</button>
+</form>
+
+
+<script>
+function formatText(command) {
+    document.execCommand(command, false, null);
+}
+
+function setColor(color) {
+    document.execCommand("foreColor", false, color);
+}
+
+document.querySelector("form").addEventListener("submit", function() {
+    document.getElementById("hiddenContent").value =
+        document.getElementById("editor").innerHTML;
+});
+</script>

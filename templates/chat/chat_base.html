@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <title>GlobalMedex | Chat</title>
+
+    <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'chat/chat.css' %}">
+    <link rel="stylesheet" href="{% static 'chat/chat_room.css' %}">
+
+    {% if site_settings.logo %}
+        <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+    {% else %}
+        <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+    {% endif %}
+
+</head>
+<body>
+
+  {% include "header.html" %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include "footer.html" %}
+
+</body>
+</html>

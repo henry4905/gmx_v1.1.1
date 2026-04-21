@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="hy">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UserHomepage | GlobalMedX</title>
+
+  <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">
+
+  {% if site_settings.logo %}
+    <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+  {% else %}
+    <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+  {% endif %}
+
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<section class="hero">
+  <div class="login-card">
+    <h2>Բարի գալուստ, {{ username }}!</h2>
+    <p>Դուք հաջողությամբ մուտք գործեցիք ձեր հաշիվ։</p>
+  </div>
+</section>
+
+{% include "footer.html" %}
+
+</body>
+
+</html>

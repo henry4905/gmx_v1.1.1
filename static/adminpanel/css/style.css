@@ -1,0 +1,23 @@
+/* Գլխավոր կոնտեյներ */
+.admin-container {
+    margin-left: 250px; /* Sidebar width */
+}
+
+/* Content area – այստեղ կբացվեն դինամիկ էջերը */
+.content {
+    margin-top: 60px; /* Topbar height */
+    padding: 50px;
+    min-height: calc(100vh - 60px);
+    background: #f8fafc;
+}
+
+/* Երբ sidebar փակ է */
+.admin-container.full{
+    margin-left:0;
+    transition: margin-left 0.3s ease;
+}
+
+/* Smooth animation */
+.admin-container{
+    transition: margin-left 0.3s ease;
+}

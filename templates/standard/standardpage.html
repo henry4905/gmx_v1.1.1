@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GlobalMedex | Ստանդարտներ և դասակարգում</title>
+
+{% if site_settings.logo %}
+<link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+<link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+<link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+<link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'standards/css/standardpage.css' %}">
+
+
+
+</head>
+
+<body>
+
+{% include "header.html" %}
+
+<section class="hero">
+<div class="text">
+<h1>Ստանդարտներ և դասակարգում</h1>
+<p>
+GlobalMedX-ում յուրաքանչյուր ապրանք դասակարգվում է ոլորտային չափանիշների հիման վրա՝ ապահովելով որակ, անվտանգություն և միջազգային համապատասխանություն։
+</p>
+</div>
+
+<div class="hero-visual">
+<i class="fa-solid fa-shield-heart"></i>
+</div>
+</section>
+
+<section class="section">
+
+<h2 class="section-title">Հիմնական ոլորտներ</h2>
+
+<div class="category-grid">
+
+<div class="category-card">
+<div class="icon"><i class="fa-solid fa-hospital"></i></div>
+<h3>Բուժսարքավորումներ</h3>
+<p>Բժշկական սարքավորումներ և տեխնոլոգիաներ առողջապահական հաստատությունների համար։</p>
+</div>
+
+<div class="category-card">
+<div class="icon"><i class="fa-solid fa-tooth"></i></div>
+<h3>Ստոմատոլոգիա</h3>
+<p>Ատամնաբուժական սարքավորումներ և նյութեր կլինիկական կիրառությունների համար։</p>
+</div>
+
+<div class="category-card">
+<div class="icon"><i class="fa-solid fa-flask-vial"></i></div>
+<h3>Լաբորատոր նյութեր և սարքավորումներ</h3>
+<p>Լաբորատոր սարքեր և ախտորոշիչ համակարգեր ճշգրիտ հետազոտությունների համար։</p>
+</div>
+
+
+</div>
+
+<div class="process">
+<h3>Ինչպե՞ս ենք աշխատում</h3>
+<div class="steps">
+<div class="step"><div class="step-number">1</div><p>Նախնական գրանցում և փաստաթղթերի ընդունում</p></div>
+<div class="step"><div class="step-number">2</div><p>Տեխնիկական , անվտանգության և ընդհանուր  ստուգում և վերլուծություններ</p></div>
+<div class="step"><div class="step-number">3</div><p>Համապատասխանության գնահատում</p></div>
+<div class="step"><div class="step-number">4</div><p>Թվային գրանցում և հրապարակում</p></div>
+</div>
+</div>
+
+</section>
+
+{% include "footer.html" %}
+
+
+
+
+</body>
+</html>

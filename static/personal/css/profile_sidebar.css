@@ -1,0 +1,98 @@
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.menu-item .icon {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+}
+
+.menu-item:hover {
+    background: rgba(12, 99, 231, 0.08);
+    transform: translateX(4px);
+}
+
+.menu-item.active {
+    background: var(--blue);
+    color: white;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0 15px 0;  /* վերև/ներքև տարածություն */
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    margin-bottom: 20px;     /* բաժիններից հեռու */
+}
+
+.profile_logo {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--blue);
+    text-align: center;
+}
+
+/* Մնացած menu-items-ի նման text */
+.chat_message  {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark);
+}
+
+
+.chat_message .icon {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+}
+
+.chat_message:hover {
+    background: rgba(12, 99, 231, 0.08);
+    transform: translateX(4px);
+}
+
+.chat_message.active {
+    background: var(--blue);
+    color: white;
+}
+
+/* Մնացած menu-items-ի նման text */
+.chat_message a {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark);
+    text-decoration: none;
+    display: flex;       /* svg + text inline alignment */
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Hover effect inherited .menu-item-ից, եթե ուզում ես add */
+.chat_message:hover a {
+    color: var(--black);
+}

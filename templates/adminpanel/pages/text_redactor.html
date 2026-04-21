@@ -1,0 +1,82 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'adminpanel/css/editor.css' %}">
+
+<div style="max-width:800px; margin:auto; font-family:Arial, sans-serif;">
+    <h1>Տեքստային ռեդակտոր</h1>
+
+    <form method="POST" action="{% url 'dynamic_page' page='text_redactor' %}">
+        {% csrf_token %}
+
+        <!-- Display errors -->
+        {% if form.errors %}
+            <div style="color:red;">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- Other form fields -->
+        <div>{{ form.code.label_tag }} {{ form.code }}</div>
+        <div>{{ form.title.label_tag }} {{ form.title }}</div>
+        <div>{{ form.section.label_tag }} {{ form.section }}</div>
+        <div>{{ form.is_active.label_tag }} {{ form.is_active }}</div>
+
+        <!-- Toolbar -->
+        <div id="toolbar">
+            <label><input type="checkbox" onclick="document.execCommand('bold', false, null)"> Ամիտ</label>
+            <label><input type="checkbox" onclick="document.execCommand('italic', false, null)"> Թեք</label>
+            <label><input type="checkbox" onclick="document.execCommand('underline', false, null)"> Եզրագծել</label>
+            <label><input type="checkbox" onclick="document.execCommand('strikeThrough', false, null)"> Կրճատ</label>
+
+            <select onchange="document.execCommand('fontSize', false, this.value)">
+                <option value="">Տառերի չափ</option>
+                <option value="1">Փոքր</option>
+                <option value="2">Փոքր սովորական</option>
+                <option value="3">Սովորական</option>
+                <option value="4">Միջին</option>
+                <option value="5">Մեծ</option>
+                <option value="6">Ավելի մեծ</option>
+                <option value="7">Շատ մեծ</option>
+            </select>
+
+            <select onchange="document.execCommand('fontName', false, this.value)">
+                <option value="">Տառատեսակ</option>
+                <option value="Arial">Arial</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Times New Roman">Times</option>
+                <option value="Courier New">Courier</option>
+            </select>
+
+            <label>Տեքստի գույն: <input type="color" onchange="document.execCommand('foreColor', false, this.value)"></label>
+            <label>Ֆոնի գույն: <input type="color" onchange="document.execCommand('backColor', false, this.value)"></label>
+
+            <button type="button" onclick="document.execCommand('insertUnorderedList', false, null)">Բանավոր ցուցակ</button>
+            <button type="button" onclick="document.execCommand('insertOrderedList', false, null)">Հաշվարկված ցուցակ</button>
+
+            <button type="button" onclick="document.execCommand('justifyLeft', false, null)">Ձախ</button>
+            <button type="button" onclick="document.execCommand('justifyCenter', false, null)">Կենտրոն</button>
+            <button type="button" onclick="document.execCommand('justifyRight', false, null)">Աջ</button>
+            <button type="button" onclick="document.execCommand('justifyFull', false, null)">Լայն</button>
+        </div>
+
+        <!-- Editor -->
+        <div id="editor" contenteditable="true">
+            {{ form.content.value|safe }}
+        </div>
+
+        <input type="hidden" name="content" id="hiddenContent">
+
+        <button type="submit" onclick="document.getElementById('hiddenContent').value = document.getElementById('editor').innerHTML;">
+            Պահպանել
+        </button>
+    </form>
+</div>

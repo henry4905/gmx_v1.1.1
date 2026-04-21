@@ -1,0 +1,89 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Create Password</title>
+<link rel="stylesheet" href="{% static 'accounts/css/create_pass_login.css' %}">
+
+{% if site_settings.logo %}
+  <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+{% else %}
+  <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+{% endif %}
+
+</head>
+<body>
+
+<div class="auth-box">
+  <h1>Ստեղծել գաղտնաբառ</h1>
+  <p>Օգտագործիր ուժեղ և անվտանգ գաղտնաբառ</p>
+
+  <input type="password" id="password" placeholder="Գաղտնաբառ">
+  <input type="password" id="confirm" placeholder="Կրկնել գաղտնաբառը">
+
+  <div class="rules">
+    <div class="rule" id="len">
+      <div class="icon">✕</div> Առնվազն 8 նշան
+    </div>
+    <div class="rule" id="upper">
+      <div class="icon">✕</div> Առնվազն մեկ մեծատառ
+    </div>
+    <div class="rule" id="special">
+      <div class="icon">✕</div> Առնվազն մեկ հատուկ նշան (!@#$%)
+    </div>
+    <div class="rule" id="match">
+      <div class="icon">✕</div> Գաղտնաբառերը համընկնում են
+    </div>
+  </div>
+
+  <button id="submit" disabled>Շարունակել</button>
+</div>
+
+<script>
+// ====== Select DOM elements ======
+const password = document.getElementById("password");
+const confirmP = document.getElementById("confirm");
+const submit = document.getElementById("submit");
+
+// ====== Password rules ======
+const rules = {
+  len: v => v.length >= 8,
+  upper: v => /[A-Z]/.test(v),
+  special: v => /[!@#$%^&*]/.test(v),
+  match: () => password.value === confirmP.value && password.value.length > 0
+};
+
+function updateRules(){
+  let allValid = true;
+
+  for(const id in rules){
+    const ruleEl = document.getElementById(id);
+    const icon = ruleEl.querySelector(".icon");
+    const result = id === "match" ? rules[id]() : rules[id](password.value);
+
+    if(result){
+      ruleEl.classList.add("valid");
+      icon.textContent = "✓";
+    } else {
+      ruleEl.classList.remove("valid");
+      icon.textContent = "✕";
+      allValid = false;
+    }
+  }
+
+  submit.disabled = !allValid;
+}
+
+// ====== Event listeners ======
+password.addEventListener("input", updateRules);
+confirmP.addEventListener("input", updateRules);
+
+
+</script>
+
+</body>
+</html>

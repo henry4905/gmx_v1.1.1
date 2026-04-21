@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <!-- Favicon -->
+    
+    {% if site_settings.logo %}
+        <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+    {% else %}
+        <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+    {% endif %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GMX Administration{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'adminpanel/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'adminpanel/css/sidebar.css' %}">
+   
+    
+</head>
+
+<body>
+
+    
+
+    <div class="admin-container">
+
+        <!-- Sidebar -->
+        {% include 'adminpanel/components/sidebar.html' %}
+
+
+
+
+
+        <!-- Main content area -->
+        <div class="content" id="admin-content">
+            
+            {% block content %}{% endblock %}
+            
+        </div>
+
+    </div>
+
+
+    <!-- JS -->
+    <script src="{% static 'adminpanel/js/adminpanel.js' %}"></script>
+    
+    <script src="{% static 'adminpanel/js/sidebar.js' %}"></script>
+
+
+</body>
+
+</html>
+

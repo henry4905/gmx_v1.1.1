@@ -1,0 +1,95 @@
+{% extends "adminpanel/base.html" %}
+{% load static %}
+
+{% block title %}Նոր բրենդ | GMX Administration{% endblock %}
+
+{% block content %}
+<div class="brand-manage-page">
+
+    <div class="brand-manage-topbar">
+        <div class="brand-manage-topbar-left">
+            <a href="{% url 'dynamic_page' 'brands' %}" class="back-link">← Բոլոր բրենդները</a>
+            <h1>Նոր բրենդ</h1>
+            <p>Ավելացրու նոր բրենդ համակարգում</p>
+        </div>
+    </div>
+
+    <div class="manage-section-card" style="max-width: 760px;">
+        <form method="post" enctype="multipart/form-data" class="brand-main-form">
+            {% csrf_token %}
+
+            {% if form_error %}
+                <div class="empty-box" style="color:#b91c1c; border-color:#fecaca; background:#fef2f2;">
+                    {{ form_error }}
+                </div>
+            {% endif %}
+
+            <div class="form-grid">
+                <div class="form-field full">
+                    <label>Բրենդի անուն</label>
+                    <input type="text" name="name" placeholder="Օրինակ՝ Philips Healthcare" required>
+                </div>
+
+                <div class="form-field full">
+                    <label>Լոգո</label>
+                    <input type="file" name="logo" accept="image/*">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'dynamic_page' 'brands' %}" class="cancel-btn">Չեղարկել</a>
+                <button type="submit" class="save-btn">Ստեղծել բրենդը</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<style>
+.brand-main-form { display:flex; flex-direction:column; gap:18px; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-field { display:flex; flex-direction:column; gap:8px; }
+.form-field.full { grid-column:1 / -1; }
+.form-field label { font-size:14px; font-weight:700; color:#111827; }
+.form-field input[type="text"],
+.form-field input[type="file"] {
+    height:48px;
+    border:1px solid #d1d5db;
+    border-radius:12px;
+    padding:0 14px;
+    font-size:14px;
+    background:#fff;
+}
+.form-actions {
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    flex-wrap:wrap;
+}
+.cancel-btn, .save-btn {
+    height:46px;
+    padding:0 18px;
+    border-radius:12px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+}
+.cancel-btn {
+    border:1px solid #d1d5db;
+    color:#111827;
+    background:#fff;
+}
+.save-btn {
+    border:none;
+    background:#111827;
+    color:#fff;
+    cursor:pointer;
+}
+@media (max-width: 768px) {
+    .form-grid { grid-template-columns:1fr; }
+}
+</style>
+{% endblock %}

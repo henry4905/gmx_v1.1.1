@@ -1,0 +1,486 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hy">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <title>GlobalMedex | Բժշկական սարքավորումների միասնական թվային հարթակ</title>
+
+  <meta name="robots" content="index, follow">
+  
+  <meta name="description" content="GlobalMedex բժշկական սարքավորումների, համակարգերի և ծախսվող նյութերի միասնական թվային հարթակ՝ կառուցվածքային ներկայացման, որոնման, համեմատության և ավելի հիմնավորված ընտրության համար։">
+
+  
+
+  <link rel="canonical" href="https://globalmedex.net/">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "GlobalMedex",
+    "url": "https://globalmedex.net",
+    "logo": "{% if site_settings.logo %}{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'icons/logo.ico' %}{% endif %}"
+  }
+  </script>
+
+  
+
+  {% if site_settings.logo %}
+    <link rel="shortcut icon" href="{{ site_settings.logo.url }}">
+  {% else %}
+    <link rel="shortcut icon" href="{% static 'icons/logo.ico' %}">
+  {% endif %}
+
+  <link rel="stylesheet" href="{% static 'home/css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'home/css/footer.css' %}">
+</head>
+
+
+<body>
+
+  {% include "header.html" %}
+
+  <main>
+
+    <!-- HERO - UNCHANGED -->
+    <section class="hero">
+      <div class="hero-content">
+        <span class="hero-badge">GlobalMedex</span>
+
+        <h1>
+          Բժշկական սարքավորումների
+          միասնական թվային հարթակ
+        </h1>
+
+        <p class="hero-description">
+          GlobalMedex-ը միավորում է բժշկական սարքավորումների, համակարգերի և ծախսվող նյութերի
+          կառուցվածքային ներկայացումը մեկ հարթակում՝ ապահովելով դասակարգում, որոնում,
+          համեմատություն և ավելի հիմնավորված ընտրություն։
+        </p>
+
+        <div class="hero-actions">
+          <a href="{% url 'productspage'%}" class="primary-btn">Տեսնել սարքավորումները</a>
+          <a href="{% url 'aboutpage' %}" class="secondary-btn">Իմանալ ավելին</a>
+        </div>
+
+        <div class="search-box">
+          <input type="text" placeholder="Որոնել սարք, մոդել կամ կատեգորիա" />
+          <button class="search-btn">Որոնել</button>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-visual-glow"></div>
+
+        <div class="hero-image-card">
+          {% if site_settings.logo %}
+            <img src="{{ site_settings.logo.url }}" alt="GlobalMedex Logo" class="hero-logo-image">
+          {% else %}
+            <img src="{% static 'icons/logo.ico' %}" alt="GlobalMedex Logo" class="hero-logo-image">
+          {% endif %}
+        </div>
+
+        <div class="hero-floating-card hero-floating-card-1">
+          <span class="mini-dot"></span>
+          <div>
+            <strong>Ստանդարտիզացված տվյալներ</strong>
+            <p>Միասնական կառուցվածք և հստակ ներկայացում</p>
+          </div>
+        </div>
+
+        <div class="hero-floating-card hero-floating-card-2">
+          <span class="mini-dot"></span>
+          <div>
+            <strong>Պրոֆեսիոնալ ընտրություն</strong>
+            <p>Համեմատություն և հիմնավորված գնահատում</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SYSTEM VISUAL -->
+    <section class="section gmx-system-section">
+      <div class="gmx-system-shell">
+
+        <div class="gmx-system-copy">
+          <span class="gmx-system-kicker">GlobalMedex Interface</span>
+
+          <h2>Կառուցվածքային բժշկական միջավայր</h2>
+
+          <div class="gmx-system-chips">
+            <span>Սարքեր</span>
+            <span>Ֆիլտրեր</span>
+            <span>Համեմատություն</span>
+            <span>Ապրանքանիշեր</span>
+          </div>
+        </div>
+
+        <div class="gmx-system-panel">
+          <div class="gmx-system-topbar">
+            <div class="gmx-system-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+
+            <div class="gmx-system-top-pill">System Preview</div>
+          </div>
+
+          <div class="gmx-system-body">
+            <div class="gmx-system-left">
+              <div class="gmx-ui-card gmx-ui-card-main">
+                <div class="gmx-ui-card-head">
+                  <span class="gmx-ui-card-title">Կատեգորիաներ</span>
+                  <span class="gmx-ui-card-mini"> 100+</span>
+                </div>
+
+                <div class="gmx-ui-list">
+                  <div class="gmx-ui-list-row active">
+                    <span class="gmx-dot"></span>
+                    <span>Մոնիթորինգ</span>
+                  </div>
+                  <div class="gmx-ui-list-row">
+                    <span class="gmx-dot"></span>
+                    <span>Պատկերման համակարգեր</span>
+                  </div>
+                  <div class="gmx-ui-list-row">
+                    <span class="gmx-dot"></span>
+                    <span>Լաբորատոր սարքավորումներ</span>
+                  </div>
+                  <div class="gmx-ui-list-row">
+                    <span class="gmx-dot"></span>
+                    <span>Վիրաբուժական համակարգեր</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gmx-ui-card gmx-ui-card-filters">
+                <div class="gmx-ui-card-head">
+                  <span class="gmx-ui-card-title">Ֆիլտրեր</span>
+                </div>
+
+                <div class="gmx-filter-chips">
+                  <span>Բրենդ</span>
+                  <span>Մոդել</span>
+                  <span>Պարամետր</span>
+                  <span>Կիրառություն</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="gmx-system-center">
+              <div class="gmx-device-stage">
+                <div class="gmx-device-glow"></div>
+
+                <img
+                  src="{% static 'home/images/system-monitor.png' %}"
+                  alt="Medical Device"
+                  class="gmx-device-image"
+                >
+
+                <div class="gmx-device-badge badge-1">Monitor</div>
+                <div class="gmx-device-badge badge-2">Compare</div>
+                <div class="gmx-device-badge badge-3">Filters</div>
+              </div>
+            </div>
+
+            <div class="gmx-system-right">
+              <div class="gmx-ui-card gmx-ui-card-compare">
+                <div class="gmx-ui-card-head">
+                  <span class="gmx-ui-card-title">Compare</span>
+                </div>
+
+                <div class="gmx-compare-mini">
+                  <div class="gmx-compare-head-row">
+                    <span></span>
+                    <span>Սարք A</span>
+                    <span>Սարք B</span>
+                  </div>
+
+                  <div class="gmx-compare-line">
+                    <label>Display</label>
+                    <strong>✔</strong>
+                    <strong>✔</strong>
+                  </div>
+
+                  <div class="gmx-compare-line">
+                    <label>Monitoring</label>
+                    <strong>✔</strong>
+                    <strong>✖</strong>
+                  </div>
+
+                  <div class="gmx-compare-line">
+                    <label>Profiles</label>
+                    <strong>✔</strong>
+                    <strong>✔</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="gmx-ui-card gmx-ui-card-stats">
+                <div class="gmx-stat-box">
+                  <strong>Ապրանքանիշեր</strong>
+                  <span>մեկ հարթակում</span>
+                </div>
+
+                <div class="gmx-stat-box">
+                  <strong>Սարքեր</strong>
+                  <span>կառուցվածքային տեսքով</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- DEVICE SHOWCASE -->
+    <section class="section gmx-device-showcase">
+      <div class="gmx-showcase-grid">
+
+        <a href="{% url 'productspage' %}" class="gmx-showcase-main">
+          <div class="gmx-showcase-image">
+            <img src="{% static 'home/images/device-main.jpg' %}" alt="Medical Device Showcase">
+          </div>
+
+          <div class="gmx-showcase-overlay">
+            <span class="gmx-showcase-badge">Featured Device</span>
+            <h2>Բժշկական սարքավորումների նոր ներկայացում</h2>
+          </div>
+        </a>
+
+        <div class="gmx-showcase-side">
+          <a href="{% url 'productspage' %}" class="gmx-small-showcase-card">
+            <img src="{% static 'home/images/device-side-1.jpg' %}" alt="Medical Device">
+          </a>
+
+          <a href="{% url 'productspage' %}" class="gmx-small-showcase-card">
+            <img src="{% static 'home/images/device-side-2.jpg' %}" alt="Medical Device">
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- BRANDS -->
+    <section class="section gmx-brands-section">
+      <div class="gmx-section-head minimal">
+        <span class="section-label">Ապրանքանիշեր</span>
+      </div>
+
+      <div class="gmx-brands-wall">
+        {% for brand in brands|slice:":12" %}
+          <a href="{% url 'brand_detail' brand.id %}" class="gmx-brand-tile">
+            {% if brand.logo %}
+              <img src="{{ brand.logo.url }}" alt="{{ brand.name }}">
+            {% else %}
+              <span>{{ brand.name }}</span>
+            {% endif %}
+          </a>
+        {% empty %}
+          <div class="gmx-brand-tile empty"><span>Շուտով</span></div>
+          <div class="gmx-brand-tile empty"><span>Շուտով</span></div>
+          <div class="gmx-brand-tile empty"><span>Շուտով</span></div>
+          <div class="gmx-brand-tile empty"><span>Շուտով</span></div>
+          <div class="gmx-brand-tile empty"><span>Շուտով</span></div>
+          <div class="gmx-brand-tile empty"><span>Շուտով</span></div>
+        {% endfor %}
+      </div>
+    </section>
+
+
+    <!-- LATEST PRODUCTS -->
+    <section class="section gmx-latest-products-section">
+      <div class="gmx-section-head">
+        <span class="section-label">Նոր ավելացումներ</span>
+        <a href="{% url 'productspage' %}" class="text-link">Բոլոր սարքերը</a>
+      </div>
+
+      <div class="gmx-products-showcase">
+
+        {% for product in latest_products|slice:":1" %}
+          <a href="{% url 'product_detail' product.id %}" class="gmx-product-featured">
+            <div class="gmx-product-featured-image">
+              {% if product.main_image %}
+                <img src="{{ product.main_image.file.url }}" alt="{{ product.name }}">
+              {% else %}
+                <div class="gmx-product-placeholder"></div>
+              {% endif %}
+            </div>
+
+            <div class="gmx-product-featured-body">
+              {% if product.brand %}
+                <span class="gmx-product-brand">{{ product.brand.name }}</span>
+              {% endif %}
+              <h3>{{ product.name }}</h3>
+            </div>
+          </a>
+        {% empty %}
+          <div class="gmx-product-featured empty">
+            <div class="gmx-product-featured-image">
+              <div class="gmx-product-placeholder"></div>
+            </div>
+            <div class="gmx-product-featured-body">
+              <span class="gmx-product-brand">Soon</span>
+              <h3>Շուտով այստեղ կհայտնվեն նոր սարքեր</h3>
+            </div>
+          </div>
+        {% endfor %}
+
+        <div class="gmx-product-side-list">
+          {% for product in latest_products|slice:"1:4" %}
+            <a href="{% url 'product_detail' product.id %}" class="gmx-product-mini-card">
+              <div class="gmx-product-mini-image">
+                {% if product.main_image %}
+                  <img src="{{ product.main_image.file.url }}" alt="{{ product.name }}">
+                {% else %}
+                  <div class="gmx-product-placeholder"></div>
+                {% endif %}
+              </div>
+
+              <div class="gmx-product-mini-body">
+                <h4>{{ product.name }}</h4>
+                {% if product.brand %}
+                  <span>{{ product.brand.name }}</span>
+                {% endif %}
+              </div>
+            </a>
+          {% empty %}
+            <div class="gmx-product-mini-card empty">
+              <div class="gmx-product-mini-body">
+                <h4>Շուտով</h4>
+                <span>Նոր ավելացումներ</span>
+              </div>
+            </div>
+            <div class="gmx-product-mini-card empty">
+              <div class="gmx-product-mini-body">
+                <h4>Շուտով</h4>
+                <span>Նոր ավելացումներ</span>
+              </div>
+            </div>
+            <div class="gmx-product-mini-card empty">
+              <div class="gmx-product-mini-body">
+                <h4>Շուտով</h4>
+                <span>Նոր ավելացումներ</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- BLOG -->
+    <section class="section gmx-updates-section">
+      <div class="gmx-section-head">
+        <span class="section-label">Նորություններ</span>
+      </div>
+
+      <div class="gmx-updates-layout">
+
+        {% if latest_news %}
+          <a href="{% url 'blog_detail' latest_news.id %}" class="gmx-update-main">
+            <div class="gmx-update-visual" style="--bg:url('{{ latest_news.main_image.image.url }}')">
+              {% if latest_news.main_image %}
+                <img src="{{ latest_news.main_image.image.url }}" alt="{{ latest_news.title }}">
+              {% endif %}
+            </div>
+
+            <div class="gmx-update-content">
+              <span class="gmx-update-tag">Վերջին նորություն</span>
+              <h3>{{ latest_news.title }}</h3>
+            </div>
+          </a>
+        {% else %}
+          <div class="gmx-update-main">
+            <div class="gmx-update-visual"></div>
+            <div class="gmx-update-content">
+              <span class="gmx-update-tag">Վերջին նորություն</span>
+              <h3>Եղեք տեղեկացված GlobalMedex-ի վերջին նորություններին</h3>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="gmx-update-side">
+          <div class="gmx-update-mini">
+            <span>01</span>
+            <p>Եղեք տեղեկացված համակարգի ամենաթարմ նորություններին</p>
+          </div>
+
+          <div class="gmx-update-mini">
+            <span>02</span>
+            <p>Առողջապահական նոր լուծումներ և նոր հնարավորություններ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPARE PREVIEW -->
+    <section class="section gmx-compare-section">
+      <div class="gmx-compare-shell">
+        <div class="gmx-compare-head">
+          <span class="section-label">Compare Preview</span>
+        </div>
+
+        <div class="gmx-compare-table">
+          <div class="gmx-compare-column title">Պարամետրեր</div>
+          <div class="gmx-compare-column device">Սարք A</div>
+          <div class="gmx-compare-column device">Սարք B</div>
+
+          <div class="gmx-compare-row">Display</div>
+          <div class="gmx-compare-row value">✔</div>
+          <div class="gmx-compare-row value">✔</div>
+
+          <div class="gmx-compare-row">Monitoring</div>
+          <div class="gmx-compare-row value">✔</div>
+          <div class="gmx-compare-row value">✖</div>
+
+          <div class="gmx-compare-row">Cooling</div>
+          <div class="gmx-compare-row value">✔</div>
+          <div class="gmx-compare-row value">✔</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CTA - UNCHANGED -->
+    <section class="section cta-section">
+      <div class="cta-box">
+        <div class="cta-text">
+          <span class="section-label">Համագործակցություն</span>
+          <h2>Ներկայացրեք ձեր սարքավորումները ավելի պրոֆեսիոնալ թվային միջավայրում</h2>
+          <p>
+            GlobalMedex-ը հնարավորություն է տալիս ձեր առաջարկները ներկայացնել կառուցվածքային,
+            վստահելի և միասնական հարթակում։
+          </p>
+
+          <div class="cta-mini-points">
+            <span>Կառուցվածքային ներկայացում</span>
+            <span>Պրոֆեսիոնալ թվային միջավայր</span>
+          </div>
+        </div>
+
+        <div class="cta-action">
+          <a href="#" class="primary-btn">Կապ հաստատել</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  {% include "footer.html" %}
+
+  <script src="{% static 'home/js/home.js' %}"></script>
+
+</body>
+</html>

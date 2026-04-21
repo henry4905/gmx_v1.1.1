@@ -1,0 +1,229 @@
+/* =============================
+   Chat Room CSS - chat_room.css
+============================= */
+
+/* ---------- Variables ---------- */
+:root {
+    --blue: #0c63e7;
+    --deep: #0a3fa3;
+    --aqua: #00c6c2;
+    --bg: #f5f9ff;
+    --dark: #0d1b2a;
+    --text: #1b263b;
+    --sidebar-width: 280px;
+    --main-gap: 20px;
+    --font: 'Inter', sans-serif;
+}
+
+/* ---------- Reset ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+}
+
+/* ---------- Chat Wrapper ---------- */
+.chat-wrapper {
+    display: flex;
+    min-height: 100vh;
+    gap: var(--main-gap);
+}
+
+/* ---------- Sidebar ---------- */
+.chat-sidebar {
+    width: var(--sidebar-width);
+    background: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-sidebar h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--deep);
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 5px;
+}
+
+/* Conversation links */
+.chat-user {
+    display: block;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s ease;
+    background: #f9f9f9;
+}
+
+.chat-user:hover {
+    background: var(--blue);
+    color: #fff;
+}
+
+.chat-user.active {
+    background: var(--deep);
+    color: #fff;
+}
+
+/* ---------- Main Chat Area ---------- */
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+    gap: 15px;
+}
+
+/* Empty chat */
+.chat-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    color: #888;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* Chat messages container */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 5px;
+}
+
+/* Messages */
+.message {
+    max-width: 65%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    position: relative;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 0.95rem;
+}
+
+.message.sent {
+    align-self: flex-end;
+    background: var(--blue);
+    color: #fff;
+    border-bottom-right-radius: 3px;
+}
+
+.message.received {
+    align-self: flex-start;
+    background: #f1f1f1;
+    color: var(--text);
+    border-bottom-left-radius: 3px;
+}
+
+/* Timestamp */
+.message span {
+    font-size: 0.7rem;
+    opacity: 0.6;
+    margin-top: 3px;
+    display: block;
+    text-align: right;
+}
+
+/* No messages */
+.no-messages {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-top: 20px;
+}
+
+/* ---------- Input ---------- */
+.chat-input {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.chat-input input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 5px rgba(12, 99, 231, 0.3);
+}
+
+.chat-input button {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 0 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.chat-input button:hover {
+    background: var(--deep);
+}
+
+/* ---------- Scrollbar Styling ---------- */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: var(--blue);
+    border-radius: 3px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .chat-wrapper {
+        flex-direction: column;
+    }
+
+    .chat-sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .chat-main {
+        border-radius: 0;
+        padding: 15px;
+    }
+
+    .message {
+        max-width: 80%;
+    }
+}
+
+

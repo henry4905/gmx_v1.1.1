@@ -1,0 +1,152 @@
+:root {
+  --blue: #0c63e7;
+  --deep: #0a3fa3;
+  --aqua: #00c6c2;
+  --bg: #f5f9ff;
+  --dark: #0d1b2a;
+  --text: #1b263b;
+  --radius: 16px;
+  --sidebar-width: 260px;
+  --transition-speed: 0.3s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: linear-gradient(125deg, var(--deep), var(--blue), var(--aqua));
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* MAIN CONTENT - 2 COLUMN */
+.main-content {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  margin: 10px 8px; /* փոքրացրած margin */
+  min-height: 700px;
+  align-items: stretch;
+  transition: all var(--transition-speed) ease;
+}
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-width);
+  background: #f9fbff;
+  border-radius: var(--radius);
+  padding: 12px; /* փոքրացրած padding */
+  transition: transform var(--transition-speed) ease, opacity var(--transition-speed) ease;
+  position: relative;
+  z-index: 50;
+}
+
+/* Main Area */
+.main-area {
+  flex: 1;
+  background: white;
+  border-radius: var(--radius);
+  padding: 12px; /* փոքրացրած padding */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all var(--transition-speed);
+}
+
+/* Links & hover effects */
+a {
+  color: var(--blue);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover {
+  color: var(--deep);
+}
+
+.sidebar ul li {
+  margin-bottom: 10px; /* փոքրացրած spacing */
+  transition: transform 0.2s;
+}
+.sidebar ul li:hover {
+  transform: translateX(4px);
+}
+
+/* RESPONSIVE SMALL SCREEN */
+@media(max-width: 1000px) {
+  .main-content {
+    flex-direction: column;
+    gap: 14px;
+    margin: 10px 10px;
+  }
+
+  /* Sidebar slide-down animation */
+  .sidebar {
+    position: fixed;
+    top: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 300px;
+    opacity: 0;
+    z-index: 150;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+
+    max-height: 80vh;     
+    overflow-y: auto;      
+  }
+  .sidebar.active {
+    top: 60px; /* header-ից հետո */
+    opacity: 1;
+  }
+
+  /* Overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background: rgba(0,0,0,0.35);
+    z-index: 100;
+    transition: opacity var(--transition-speed);
+  }
+  .overlay.active {
+    display: block;
+  }
+
+  /* Sidebar toggle button fixed bottom */
+  .sidebar-toggle {
+    display: block;
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 200;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-size: 16px;
+    transition: background var(--transition-speed), transform 0.2s;
+  }
+  .sidebar-toggle:hover {
+    background: var(--deep);
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+/* Hide toggle button on large screens */
+@media(min-width:1001px){
+  .sidebar-toggle {
+    display: none;
+  }
+}
