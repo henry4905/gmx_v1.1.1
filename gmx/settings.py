@@ -27,9 +27,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9he9%#6v3hv)p-at$cmn**n+be3gwqf2!8@+y9*q1s8nwg+zx@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    "globalmedex.net",
+    "www.globalmedex.net",
+    "127.0.0.1",
+    "localhost",
+]
 
 
 # Application definition
