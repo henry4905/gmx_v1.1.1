@@ -118,27 +118,109 @@ a {
   min-width: 0;
 }
 
-.product-media-shell {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.product-status-badge {
+  transition: 0.2s ease;
+  position: static;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  height: 34px;
+  padding: 0 13px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+
+  background: #ffffff;
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+
+  z-index: 1;
+}
+
+.product-status-badge .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Առկա է */
+.product-status-badge.status-available {
+  color: #047857;
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.product-status-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+
+.product-status-badge.status-available .status-dot {
+  background: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
+}
+
+/* Պատվերով */
+.product-status-badge.status-order {
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.product-status-badge.status-order .status-dot {
+  background: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+/* Առկա չէ */
+.product-status-badge.status-unavailable {
+  color: #b91c1c;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.product-status-badge.status-unavailable .status-dot {
+  background: #dc2626;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+}
+
+@media (max-width: 640px) {
+  .product-status-badge {
+    height: 30px;
+    padding: 0 10px;
+    font-size: 11.5px;
+    gap: 7px;
+  }
+
+  .product-status-badge .status-dot {
+    width: 7px;
+    height: 7px;
+  }
 }
 
 .product-media-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .product-media-status {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   font-size: 14px;
   font-weight: 700;
   color: var(--text);
+  flex-shrink: 0;
 }
 
 .media-status-dot {
@@ -154,6 +236,7 @@ a {
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+  margin-left: auto;
 }
 
 .media-counter {
@@ -1703,3 +1786,4 @@ video.product-main-media {
     height: 58px;
   }
 }
+

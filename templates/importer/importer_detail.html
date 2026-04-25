@@ -113,7 +113,7 @@
             </span>
           </div>
 
-          {% if certificates %}
+          {% if importer.is_certified and certificates %}
             <div class="importer-meta-chip">
               <span class="meta-label">Սերտիֆիկատներ</span>
               <span class="meta-value">{{ certificates|length }} հատ</span>
@@ -167,16 +167,6 @@
         </div>
 
         <div class="importer-contact-grid">
-          {% if importer.phone %}
-            <article class="importer-card contact-card">
-              <h3>Գլխավոր պատասխանատու</h3>
-              <p class="contact-main-value">
-                <a href="tel:{{ importer.phone }}">{{ importer.phone }}</a>
-              </p>
-              <span class="contact-note">Ղեկավարի / հիմնական կապի հեռախոս</span>
-            </article>
-          {% endif %}
-
           {% if work_phones %}
             <article class="importer-card contact-card">
               <h3>Աշխատանքային հեռախոսահամարներ</h3>
@@ -240,7 +230,12 @@
             <div class="importer-certificates-grid" id="importer-certificates">
               {% for certificate in certificates %}
                 <article class="certificate-card">
-                  <a href="{{ certificate.file.url }}" class="certificate-link" target="_blank" rel="noopener noreferrer">
+                  {% if certificate.file %}
+                    <a href="{{ certificate.file.url }}" class="certificate-link" target="_blank" rel="noopener noreferrer">
+                  {% else %}
+                    <div class="certificate-link">
+                  {% endif %}
+
                     <div class="certificate-preview">
                       {% if certificate.file %}
                         {% if certificate.file.url|lower|slice:"-4:" == ".pdf" %}
@@ -259,9 +254,18 @@
 
                     <div class="certificate-body">
                       <h3>{{ certificate.name }}</h3>
-                      <p>Բացել սերտիֆիկատը</p>
+                      {% if certificate.file %}
+                        <p>Բացել սերտիֆիկատը</p>
+                      {% else %}
+                        <p>Ֆայլը դեռ կցված չէ</p>
+                      {% endif %}
                     </div>
-                  </a>
+
+                  {% if certificate.file %}
+                    </a>
+                  {% else %}
+                    </div>
+                  {% endif %}
                 </article>
               {% endfor %}
             </div>
@@ -341,21 +345,6 @@
             </div>
           {% endif %}
 
-          {% if importer.verification_status %}
-            <div class="sidebar-info-row">
-              <span>Ստուգման կարգավիճակ</span>
-              <strong>
-                {% if importer.verification_status == 'approved' %}
-                  Հաստատված է
-                {% elif importer.verification_status == 'rejected' %}
-                  Մերժված է
-                {% else %}
-                  Ընթացքի մեջ
-                {% endif %}
-              </strong>
-            </div>
-          {% endif %}
-
           <div class="sidebar-info-row">
             <span>Սերտիֆիկացիա</span>
             <strong>
@@ -367,16 +356,12 @@
             </strong>
           </div>
 
-          <div class="sidebar-info-row">
-            <span>Հրապարակայնացում</span>
-            <strong>
-              {% if importer.is_approved %}
-                Ակտիվ
-              {% else %}
-                Սպասման մեջ
-              {% endif %}
-            </strong>
-          </div>
+          {% if importer.is_certified and certificates %}
+            <div class="sidebar-info-row">
+              <span>Սերտիֆիկատներ</span>
+              <strong>{{ certificates|length }} հատ</strong>
+            </div>
+          {% endif %}
         </div>
       </div>
 

@@ -300,35 +300,7 @@ body{
   color:var(--muted);
 }
 
-/* =========================
-   Footer
-========================= */
-.footer{
-  background:var(--dark);
-  color:var(--white);
-  padding:60px 24px;
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:36px;
-}
 
-.footer div{
-  max-width:300px;
-}
-
-.footer a{
-  color:var(--white);
-  opacity:0.74;
-  text-decoration:none;
-  display:block;
-  margin-bottom:8px;
-  transition:opacity .25s ease;
-}
-
-.footer a:hover{
-  opacity:1;
-}
 
 /* =========================
    Animations

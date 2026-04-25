@@ -34,7 +34,7 @@
       "@type": "Offer",
       "priceCurrency": "AMD",
       "price": "{{ product.price_min }}",
-      "availability": "https://schema.org/InStock"
+      "availability": "{% if product.status == 'available' %}https://schema.org/InStock{% elif product.status == 'on_order' %}https://schema.org/PreOrder{% else %}https://schema.org/OutOfStock{% endif %}"
     }{% endif %}
   }
   </script>
@@ -46,7 +46,6 @@
   <script src="{% static 'products/js/product_detail.js' %}" defer></script>
 </head>
 
-
 <body>
 
 {% include "header.html" %}
@@ -54,10 +53,8 @@
 <section class="product-detail-page">
   <div class="container">
 
-    <!-- TOP SECTION -->
     <div class="product-top-layout">
 
-      <!-- MEDIA BLOCK -->
       <div class="product-media-card">
         <div class="product-media-shell">
 
@@ -76,12 +73,7 @@
                 </div>
               {% endif %}
 
-              <button
-                type="button"
-                class="media-expand-btn"
-                id="openMediaPreview"
-                aria-label="Բացել մեծ չափով"
-              >
+              <button type="button" class="media-expand-btn" id="openMediaPreview" aria-label="Բացել մեծ չափով">
                 <i class="fa-solid fa-expand"></i>
                 <span>Մեծացնել</span>
               </button>
@@ -96,26 +88,12 @@
 
               <div class="slides-container">
                 {% for m in media %}
-                  <div
-                    class="slide {% if forloop.first %}active{% endif %}"
-                    data-slide-index="{{ forloop.counter0 }}"
-                    data-media-type="{{ m.media_type }}"
-                    data-media-src="{{ m.file.url }}"
-                  >
+                  <div class="slide {% if forloop.first %}active{% endif %}" data-slide-index="{{ forloop.counter0 }}" data-media-type="{{ m.media_type }}" data-media-src="{{ m.file.url }}">
                     <div class="slide-inner">
                       {% if m.media_type == 'image' %}
-                        <img
-                          src="{{ m.file.url }}"
-                          alt="{{ product.name }}"
-                          class="product-main-media media-preview-trigger"
-                        >
+                        <img src="{{ m.file.url }}" alt="{{ product.name }}" class="product-main-media media-preview-trigger">
                       {% elif m.media_type == 'video' %}
-                        <video
-                          class="product-main-media media-preview-trigger"
-                          controls
-                          preload="metadata"
-                          playsinline
-                        >
+                        <video class="product-main-media media-preview-trigger" controls preload="metadata" playsinline>
                           <source src="{{ m.file.url }}" type="video/mp4">
                           Your browser does not support the video tag.
                         </video>
@@ -131,11 +109,7 @@
             {% else %}
               <div class="slide active">
                 <div class="slide-inner">
-                  <img
-                    src="{% static 'images/no-image.jpg' %}"
-                    alt="No image"
-                    class="fallback-image product-main-media"
-                  >
+                  <img src="{% static 'images/no-image.jpg' %}" alt="No image" class="fallback-image product-main-media">
                 </div>
               </div>
             {% endif %}
@@ -144,12 +118,7 @@
           {% if media %}
             <div class="media-thumbs" id="mediaThumbs">
               {% for m in media %}
-                <button
-                  type="button"
-                  class="media-thumb {% if forloop.first %}active{% endif %}"
-                  data-thumb-index="{{ forloop.counter0 }}"
-                  aria-label="Մեդիա {{ forloop.counter }}"
-                >
+                <button type="button" class="media-thumb {% if forloop.first %}active{% endif %}" data-thumb-index="{{ forloop.counter0 }}" aria-label="Մեդիա {{ forloop.counter }}">
                   {% if m.media_type == 'image' %}
                     <img src="{{ m.file.url }}" alt="{{ product.name }}">
                   {% elif m.media_type == 'video' %}
@@ -165,20 +134,34 @@
         </div>
       </div>
 
-      <!-- INFO BLOCK -->
       <div class="product-info-card">
         <div class="product-info">
 
           <div class="product-info-head">
-
             <div class="product-info-head-top">
-            {% if product.brand and product.brand.id and product.brand.name %}
-              <a href="{% url 'brand_detail' product.brand.id %}" class="product-brand-badge">
-                <i class="fa-solid fa-shield-heart"></i>
-                <span>{{ product.brand.name }}</span>
-              </a>
-            {% endif %}
-          </div>
+              {% if product.brand and product.brand.id and product.brand.name %}
+                <a href="{% url 'brand_detail' product.brand.id %}" class="product-brand-badge">
+                  <i class="fa-solid fa-shield-heart"></i>
+                  <span>{{ product.brand.name }}</span>
+                </a>
+              {% endif %}
+
+              <div class="product-status-badge
+                {% if product.status == 'available' %}status-available
+                {% elif product.status == 'on_order' %}status-order
+                {% elif product.status == 'unavailable' %}status-unavailable
+                {% endif %}">
+                <span class="status-dot"></span>
+
+                {% if product.status == 'available' %}
+                  Առկա է
+                {% elif product.status == 'on_order' %}
+                  Պատվերով
+                {% elif product.status == 'unavailable' %}
+                  Առկա չէ
+                {% endif %}
+              </div>
+            </div>
 
             <h1>{{ product.name }}</h1>
           </div>
@@ -218,7 +201,6 @@
             <div class="meta-row">
               <div class="meta-label">Ներկրող</div>
               <div class="meta-value">
-
                 {% if product.importer.slug %}
                   <a href="{% url 'importer_detail' product.importer.slug %}" class="importer-link">
                     {{ product.importer.company_name }}
@@ -226,10 +208,10 @@
                 {% else %}
                   <span>{{ product.importer.company_name }}</span>
                 {% endif %}
-
               </div>
             </div>
             {% endif %}
+
             {% if product.standardisation_code %}
             <div class="meta-row">
               <div class="meta-label">Ստանդարտացման կոդ</div>
@@ -252,11 +234,7 @@
                     {% endif %}
                   </div>
 
-                  <button
-                    type="button"
-                    class="exchange-link"
-                    id="openExchangeModal"
-                  >
+                  <button type="button" class="exchange-link" id="openExchangeModal">
                     <i class="fa-solid fa-coins"></i>
                     <span>տեսնել փոխարժեքով</span>
                   </button>
@@ -279,43 +257,23 @@
       </div>
     </div>
 
-    <!-- TABS / CONTENT NAV -->
     <div class="product-content-card">
       <div class="product-section-tabs" role="tablist" aria-label="Ապրանքի բաժիններ">
-        <button
-          type="button"
-          class="section-tab active"
-          data-tab-target="parameters-section"
-          role="tab"
-          aria-selected="true"
-        >
+        <button type="button" class="section-tab active" data-tab-target="parameters-section" role="tab" aria-selected="true">
           <span>Պարամետրեր</span>
         </button>
 
-        <button
-          type="button"
-          class="section-tab"
-          data-tab-target="description-section"
-          role="tab"
-          aria-selected="false"
-        >
+        <button type="button" class="section-tab" data-tab-target="description-section" role="tab" aria-selected="false">
           <span>Նկարագրություն</span>
         </button>
 
-        <button
-          type="button"
-          class="section-tab"
-          data-tab-target="documents-section"
-          role="tab"
-          aria-selected="false"
-        >
+        <button type="button" class="section-tab" data-tab-target="documents-section" role="tab" aria-selected="false">
           <span>Փաստաթղթեր և սերտիֆիկատներ</span>
         </button>
       </div>
 
       <div class="product-tab-panels">
 
-        <!-- PARAMETERS TAB -->
         <div class="tab-panel active" id="parameters-section" role="tabpanel">
           {% if product.ordered_attribute_values or product.component_groups.all or product.child_components.all %}
 
@@ -336,11 +294,7 @@
                         {% if attr_value.attribute.data_type == "number" %}
                           {{ attr_value.value_number }}
                         {% elif attr_value.attribute.data_type == "boolean" %}
-                          {% if attr_value.value_boolean %}
-                            Այո
-                          {% else %}
-                            Ոչ
-                          {% endif %}
+                          {% if attr_value.value_boolean %}Այո{% else %}Ոչ{% endif %}
                         {% else %}
                           {{ attr_value.value_text }}
                         {% endif %}
@@ -405,7 +359,6 @@
           {% endif %}
         </div>
 
-        <!-- DESCRIPTION TAB -->
         <div class="tab-panel" id="description-section" role="tabpanel" hidden>
           <div class="product-description-section">
             <h2>Նկարագրություն</h2>
@@ -422,11 +375,8 @@
           </div>
         </div>
 
-        <!-- DOCUMENTS TAB -->
         <div class="tab-panel" id="documents-section" role="tabpanel" hidden>
-
           <div class="product-documents-section">
-
             <h2>Փաստաթղթեր և սերտիֆիկատներ</h2>
 
             <div class="documents-group">
@@ -501,7 +451,6 @@
   </div>
 </section>
 
-<!-- IMPORTER MODAL -->
 {% if product.importer %}
 <div class="importer-modal-overlay" id="importerModal">
   <div class="importer-modal-box">
@@ -554,7 +503,6 @@
   data-rub-rate="{{ exchange_rates.RUB|default_if_none:'' }}"
 ></div>
 
-<!-- EXCHANGE RATE MODAL -->
 <div class="exchange-modal-overlay" id="exchangeModal">
   <div class="exchange-modal-box">
     <button type="button" class="exchange-modal-close" id="closeExchangeModal" aria-label="Փակել">
@@ -603,13 +551,7 @@
       </div>
 
       <div class="exchange-modal-footer">
-        <a
-          href="https://www.cba.am/hy/"
-          class="exchange-cba-link"
-          id="cbaRatesLink"
-          target="_blank"
-          rel="noopener"
-        >
+        <a href="https://www.cba.am/hy/" class="exchange-cba-link" id="cbaRatesLink" target="_blank" rel="noopener">
           Դիտել ՀՀ ԿԲ պաշտոնական փոխարժեքները
         </a>
       </div>
@@ -617,15 +559,9 @@
   </div>
 </div>
 
-<!-- MEDIA PREVIEW MODAL -->
 <div class="media-preview-overlay" id="mediaPreviewModal">
   <div class="media-preview-box">
-    <button
-      type="button"
-      class="media-preview-close"
-      id="closeMediaPreview"
-      aria-label="Փակել"
-    >
+    <button type="button" class="media-preview-close" id="closeMediaPreview" aria-label="Փակել">
       &times;
     </button>
 
@@ -637,23 +573,14 @@
       </div>
     </div>
 
-    <button
-      type="button"
-      class="media-preview-nav media-preview-prev"
-      id="previewPrevBtn"
-      aria-label="Նախորդ մեդիա"
-    >
+    <button type="button" class="media-preview-nav media-preview-prev" id="previewPrevBtn" aria-label="Նախորդ մեդիա">
       <i class="fa-solid fa-chevron-left"></i>
     </button>
 
     <div class="media-preview-stage" id="mediaPreviewStage">
       {% if media %}
         {% for m in media %}
-          <div
-            class="media-preview-item {% if forloop.first %}active{% endif %}"
-            data-preview-index="{{ forloop.counter0 }}"
-            data-preview-type="{{ m.media_type }}"
-          >
+          <div class="media-preview-item {% if forloop.first %}active{% endif %}" data-preview-index="{{ forloop.counter0 }}" data-preview-type="{{ m.media_type }}">
             {% if m.media_type == 'image' %}
               <img src="{{ m.file.url }}" alt="{{ product.name }}">
             {% elif m.media_type == 'video' %}
@@ -667,12 +594,7 @@
       {% endif %}
     </div>
 
-    <button
-      type="button"
-      class="media-preview-nav media-preview-next"
-      id="previewNextBtn"
-      aria-label="Հաջորդ մեդիա"
-    >
+    <button type="button" class="media-preview-nav media-preview-next" id="previewNextBtn" aria-label="Հաջորդ մեդիա">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
   </div>
