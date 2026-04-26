@@ -19,8 +19,20 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+from django.contrib.sitemaps.views import sitemap
+from apps.seo.sitemaps import StaticViewSitemap, ProductSitemap
+
+
+sitemaps = {
+    "static": StaticViewSitemap,
+    "products": ProductSitemap,
+}
+
 urlpatterns = [
 
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    
     path('admin/', admin.site.urls),
 
     path('adminpanel/', include('adminpanel.urls')),

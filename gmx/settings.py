@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'adminpanel',
 
     'django_ckeditor_5',
-
+    'django.contrib.sitemaps',
     
     'channels',
 
@@ -72,6 +72,8 @@ INSTALLED_APPS = [
     'apps.core_logic',
     'apps.chat',
     'apps.api',
+
+    'apps.seo',
     
 
 ]
@@ -196,8 +198,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 

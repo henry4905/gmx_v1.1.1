@@ -287,22 +287,36 @@
                 <h3>{{ type_group.grouper.name }}</h3>
 
                 <div class="attribute-list">
-                  {% for attr_value in type_group.list %}
+
+                  {% regroup type_group.list by attribute as attribute_groups %}
+
+                  {% for attribute_group in attribute_groups %}
                     <div class="attribute-row">
-                      <div class="attribute-label">{{ attr_value.attribute.name }}</div>
+                      <div class="attribute-label">
+                        {{ attribute_group.grouper.name }}
+                      </div>
+
                       <div class="attribute-value">
-                        {% if attr_value.attribute.data_type == "number" %}
-                          {{ attr_value.value_number }}
-                        {% elif attr_value.attribute.data_type == "boolean" %}
-                          {% if attr_value.value_boolean %}Այո{% else %}Ոչ{% endif %}
-                        {% else %}
-                          {{ attr_value.value_text }}
-                        {% endif %}
-                        {% if attr_value.attribute.unit %} {{ attr_value.attribute.unit }}{% endif %}
+                        {% for attr_value in attribute_group.list %}
+                          {% if not forloop.first %}, {% endif %}
+
+                          {% if attr_value.attribute.data_type == "number" %}
+                            {{ attr_value.value_number }}
+                          {% elif attr_value.attribute.data_type == "boolean" %}
+                            {% if attr_value.value_boolean %}Այո{% else %}Ոչ{% endif %}
+                          {% else %}
+                            {{ attr_value.value_text }}
+                          {% endif %}
+
+                          {% if attr_value.attribute.unit %} {{ attr_value.attribute.unit }}{% endif %}
+                        {% endfor %}
                       </div>
                     </div>
                   {% endfor %}
+
                 </div>
+
+                
               {% endfor %}
             </div>
             {% endif %}
